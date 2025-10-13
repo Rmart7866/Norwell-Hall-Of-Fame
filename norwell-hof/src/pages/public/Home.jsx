@@ -1,94 +1,158 @@
 // src/pages/public/Home.jsx
 import { Link } from 'react-router-dom';
-import { Trophy, Users, Images, Video } from 'lucide-react';
-import PageBanner from '../../components/common/PageBanner';
+import { Trophy, Users, Images, Video, Star } from 'lucide-react';
 
 const Home = () => {
   return (
     <div>
-      {/* Full-Screen Banner */}
-      <PageBanner 
-        title="NORWELL CLIPPER HALL OF FAME"
-        subtitle="Honoring Excellence in Athletics"
-        backgroundImage="https://images.unsplash.com/photo-1459865264687-595d652de67e?w=1920&q=80"
-      />
-
-      {/* Stats Section */}
-      <section className="py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="bg-white rounded-2xl shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 p-8 text-center transform hover:-translate-y-3 hover:scale-105 group border border-gray-100">
-              <Trophy className="w-16 h-16 mx-auto mb-6 text-yellow-400 group-hover:scale-125 transition-transform duration-500" />
-              <p className="text-6xl font-black text-blue-900 mb-3 bg-gradient-to-br from-blue-900 to-blue-700 bg-clip-text text-transparent">15+</p>
-              <p className="text-gray-700 font-bold text-lg">Years of Excellence</p>
-            </div>
-            <div className="bg-white rounded-2xl shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 p-8 text-center transform hover:-translate-y-3 hover:scale-105 group border border-gray-100">
-              <Users className="w-16 h-16 mx-auto mb-6 text-yellow-400 group-hover:scale-125 transition-transform duration-500" />
-              <p className="text-6xl font-black text-blue-900 mb-3 bg-gradient-to-br from-blue-900 to-blue-700 bg-clip-text text-transparent">100+</p>
-              <p className="text-gray-700 font-bold text-lg">Honored Inductees</p>
-            </div>
-            <div className="bg-white rounded-2xl shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 p-8 text-center transform hover:-translate-y-3 hover:scale-105 group border border-gray-100">
-              <Images className="w-16 h-16 mx-auto mb-6 text-yellow-400 group-hover:scale-125 transition-transform duration-500" />
-              <p className="text-6xl font-black text-blue-900 mb-3 bg-gradient-to-br from-blue-900 to-blue-700 bg-clip-text text-transparent">500+</p>
-              <p className="text-gray-700 font-bold text-lg">Memorable Photos</p>
-            </div>
-            <div className="bg-white rounded-2xl shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 p-8 text-center transform hover:-translate-y-3 hover:scale-105 group border border-gray-100">
-              <Video className="w-16 h-16 mx-auto mb-6 text-yellow-400 group-hover:scale-125 transition-transform duration-500" />
-              <p className="text-6xl font-black text-blue-900 mb-3 bg-gradient-to-br from-blue-900 to-blue-700 bg-clip-text text-transparent">50+</p>
-              <p className="text-gray-700 font-bold text-lg">Inspiring Videos</p>
-            </div>
-          </div>
+      {/* MASSIVE Hero Banner - Full viewport height */}
+      <div className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(/images/banner.jpg)`,
+          }}
+        />
+        
+        {/* Dramatic dark overlay with gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-blue-900/80 to-black/90"></div>
+        
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
-      </section>
-
-      {/* Featured Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-50 via-white to-yellow-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-5xl md:text-6xl font-black text-center mb-6 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
-            Latest Inductees
-          </h2>
-          <div className="h-2 w-32 bg-gradient-to-r from-blue-900 via-yellow-400 to-blue-900 mx-auto mb-16 rounded-full"></div>
+        
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4 max-w-7xl mx-auto">
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-tight tracking-tight drop-shadow-2xl">
+            <span className="block animate-slide-in-left">NORWELL HIGH SCHOOL</span>
+            <span className="block text-amber-500 animate-slide-in-right animation-delay-200">ATHLETIC</span>
+            <span className="block animate-slide-in-left animation-delay-400">HALL OF FAME</span>
+          </h1>
           
-          <div className="max-w-5xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-2xl hover:shadow-yellow-400/20 transition-all duration-500 p-12 transform hover:-translate-y-2 border border-gray-100">
-              <div className="inline-block px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 rounded-full font-black text-xl mb-8 shadow-lg">
-                Class of 2022
+          <div className="h-1 w-full max-w-2xl bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto mb-10 opacity-0 animate-fade-in animation-delay-600"></div>
+          
+          <p className="text-3xl md:text-4xl font-bold text-gray-200 tracking-wide drop-shadow-lg animate-fade-in-up animation-delay-800">
+           
+          </p>
+        </div>
+      </div>
+
+      {/* Bold Stats Section with Dramatic Styling */}
+      <section className="relative py-32 bg-gradient-to-br from-blue-950 via-blue-900 to-blue-950 overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 left-0 w-full h-full" style={{
+            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,255,255,0.1) 50px, rgba(255,255,255,0.1) 51px)`
+          }}></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-20">
+            <Star className="w-20 h-20 text-yellow-400 mx-auto mb-6 animate-pulse" />
+            <h2 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight">
+              BY THE <span className="text-yellow-400">NUMBERS</span>
+            </h2>
+            <div className="h-3 w-64 bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto mb-10"></div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: Trophy, number: "15+", label: "Years of Excellence", color: "from-amber-500 to-amber-600" },
+              { icon: Users, number: "100+", label: "Honored Inductees", color: "from-blue-400 to-blue-600" },
+              { icon: Images, number: "500+", label: "Memorable Photos", color: "from-amber-500 to-amber-600" },
+              { icon: Video, number: "50+", label: "Inspiring Videos", color: "from-blue-400 to-blue-600" }
+            ].map((stat, index) => {
+              const IconComponent = stat.icon;
+              return (
+                <div 
+                  key={index}
+                  className="group relative bg-gradient-to-br from-blue-900 to-blue-800 p-10 text-center transform hover:-translate-y-4 transition-all duration-500 hover:shadow-2xl hover:shadow-amber-500/30 border-2 border-amber-500/20 hover:border-amber-500 clip-corner"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 to-amber-500/0 group-hover:from-amber-500/10 group-hover:to-amber-500/5 transition-all duration-500"></div>
+                  
+                  <IconComponent className="w-20 h-20 mx-auto mb-6 text-amber-500 group-hover:scale-125 transition-transform duration-500" />
+                  
+                  <p className={`text-8xl font-black mb-4 bg-gradient-to-br ${stat.color} bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300`}>
+                    {stat.number}
+                  </p>
+                  
+                  <p className="text-white font-bold text-xl uppercase tracking-wider">
+                    {stat.label}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Inductees with Bold Cards */}
+      <section className="py-32 bg-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-yellow-50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-20">
+            <div className="inline-block px-10 py-4 bg-blue-900 text-amber-500 font-black text-2xl mb-8 transform -rotate-1 shadow-2xl border-4 border-amber-500">
+              LATEST
+            </div>
+            <h2 className="text-6xl md:text-7xl font-black text-blue-900 mb-6 tracking-tight">
+              CLASS OF <span className="text-amber-500">2022</span>
+            </h2>
+            <div className="h-2 w-48 bg-gradient-to-r from-blue-900 via-amber-500 to-blue-900 mx-auto"></div>
+          </div>
+          
+          <div className="max-w-6xl mx-auto">
+            <div className="relative bg-gradient-to-br from-blue-900 to-blue-800 shadow-2xl p-16 transform hover:-translate-y-2 transition-all duration-500 overflow-hidden border-4 border-amber-500">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/20 blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-amber-500/20 blur-3xl"></div>
+              
+              <div className="relative z-10">
+                <p className="text-white text-2xl mb-12 leading-relaxed font-medium">
+                  Join us in celebrating our newest inductees who have demonstrated 
+                  <span className="font-black text-amber-500"> exceptional achievement</span> and 
+                  <span className="font-black text-amber-500"> unwavering dedication</span> to Norwell athletics.
+                </p>
+                
+                <Link
+                  to="/inductees"
+                  className="inline-block bg-amber-500 text-blue-900 px-14 py-6 font-black text-2xl hover:bg-amber-400 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-amber-500/50 uppercase tracking-widest border-4 border-amber-600"
+                >
+                  Meet the Inductees →
+                </Link>
               </div>
-              <p className="text-gray-700 text-xl mb-10 leading-relaxed">
-                Join us in celebrating our newest inductees who have demonstrated 
-                exceptional achievement and dedication to Norwell athletics.
-              </p>
-              <Link
-                to="/inductees"
-                className="inline-block bg-gradient-to-r from-blue-900 to-blue-700 text-white px-10 py-4 rounded-full font-bold text-lg hover:from-blue-800 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-900/50 uppercase tracking-wider"
-              >
-                View All Inductees →
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="relative py-32 bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-yellow-400 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-yellow-400 rounded-full blur-3xl"></div>
+      {/* Powerful CTA Section */}
+      <section className="relative py-40 bg-gradient-to-br from-blue-950 via-blue-900 to-black text-white overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] bg-amber-500/10 rounded-full blur-3xl animate-pulse"></div>
         </div>
         
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-5xl md:text-6xl font-black mb-8 leading-tight">
-            Know Someone <span className="text-yellow-400">Deserving</span><br />of Recognition?
+          <Trophy className="w-28 h-28 text-amber-500 mx-auto mb-10 animate-pulse" />
+          
+          <h2 className="text-6xl md:text-8xl font-black mb-10 leading-tight tracking-tighter">
+            KNOW SOMEONE<br />
+            <span className="text-amber-500">EXTRAORDINARY?</span>
           </h2>
-          <p className="text-2xl mb-12 text-gray-200 max-w-3xl mx-auto leading-relaxed">
-            Nominations for the Hall of Fame are accepted annually. Help us honor 
-            those who have made a lasting impact on Norwell athletics.
+          
+          <div className="h-2 w-64 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto mb-12"></div>
+          
+          <p className="text-2xl md:text-3xl mb-16 text-gray-300 max-w-4xl mx-auto leading-relaxed font-medium">
+            Nominations for the Hall of Fame are accepted annually.<br />
+            <span className="text-amber-500 font-bold">Help us honor those who made a lasting impact.</span>
           </p>
+          
           <Link
             to="/about"
-            className="inline-block bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 px-12 py-5 rounded-full font-black text-xl hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 transform hover:scale-110 shadow-2xl hover:shadow-yellow-400/50 uppercase tracking-wider"
+            className="inline-block bg-gradient-to-r from-amber-500 to-amber-600 text-blue-900 px-16 py-7 font-black text-3xl hover:from-amber-400 hover:to-amber-500 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-amber-500/50 uppercase tracking-widest border-4 border-amber-700"
           >
-            Learn More →
+            Nominate Today
           </Link>
         </div>
       </section>

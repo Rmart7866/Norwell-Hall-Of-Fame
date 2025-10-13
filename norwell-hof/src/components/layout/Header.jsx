@@ -24,21 +24,17 @@ const Header = () => {
   ];
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 bg-transparent">
+    <header className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/40 to-transparent">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-6">
+        <div className="flex items-center justify-between py-8">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-              <span className="text-2xl font-black text-norwell-blue">N</span>
-            </div>
-            <div className="hidden md:block">
-              <div className="text-white font-black text-xl leading-tight drop-shadow-lg">
-                NORWELL
-              </div>
-              <div className="text-norwell-gold font-bold text-sm leading-tight drop-shadow-lg">
-                CLIPPERS
-              </div>
+          <Link to="/" className="flex items-center group">
+            <div className="h-32 shadow-2xl group-hover:shadow-amber-500/50 transition-all duration-300">
+              <img 
+                src="/images/logo.png" 
+                alt="Norwell Hall of Fame Logo" 
+                className="h-full w-auto object-contain drop-shadow-2xl"
+              />
             </div>
           </Link>
 
@@ -48,10 +44,10 @@ const Header = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-white font-bold text-sm uppercase tracking-wider hover:text-norwell-gold transition-colors duration-200 drop-shadow-lg relative group"
+                className="text-white font-black text-base uppercase tracking-wider hover:text-amber-500 transition-colors duration-200 drop-shadow-lg relative group"
               >
                 {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-norwell-gold group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute bottom-0 left-0 w-0 h-1 bg-amber-500 group-hover:w-full transition-all duration-300"></span>
               </Link>
             ))}
             
@@ -59,13 +55,13 @@ const Header = () => {
               <>
                 <Link
                   to="/admin/dashboard"
-                  className="bg-norwell-gold text-norwell-blue px-6 py-2 rounded-full font-bold text-sm uppercase hover:bg-yellow-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="bg-amber-500 text-blue-900 px-8 py-3 font-black text-base uppercase hover:bg-amber-400 transition-all duration-300 shadow-xl hover:shadow-amber-500/50 transform hover:scale-105 border-2 border-amber-600"
                 >
                   Dashboard
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="border-2 border-white text-white px-6 py-2 rounded-full font-bold text-sm uppercase hover:bg-white hover:text-norwell-blue transition-all duration-300"
+                  className="border-3 border-white text-white px-8 py-3 font-black text-base uppercase hover:bg-white hover:text-blue-900 transition-all duration-300 shadow-xl"
                 >
                   Sign Out
                 </button>
@@ -73,7 +69,7 @@ const Header = () => {
             ) : (
               <Link
                 to="/admin/login"
-                className="bg-norwell-gold text-norwell-blue px-6 py-2 rounded-full font-bold text-sm uppercase hover:bg-yellow-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="bg-amber-500 text-blue-900 px-8 py-3 font-black text-base uppercase hover:bg-amber-400 transition-all duration-300 shadow-xl hover:shadow-amber-500/50 transform hover:scale-105 border-2 border-amber-600"
               >
                 Admin
               </Link>
@@ -83,7 +79,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+            className="lg:hidden p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
           >
             {isOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
           </button>
@@ -91,13 +87,13 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <nav className="lg:hidden pb-6 bg-norwell-blue/95 backdrop-blur-sm rounded-lg mt-2 p-4 shadow-xl">
+          <nav className="lg:hidden pb-6 bg-norwell-blue/95 backdrop-blur-sm mt-2 p-4 shadow-xl">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className="block py-3 text-white font-bold uppercase hover:text-norwell-gold transition-colors border-b border-white/10"
+                className="block py-3 text-white font-bold uppercase hover:text-amber-500 transition-colors border-b border-white/10"
               >
                 {link.name}
               </Link>
@@ -108,7 +104,7 @@ const Header = () => {
                 <Link
                   to="/admin/dashboard"
                   onClick={() => setIsOpen(false)}
-                  className="block py-3 text-norwell-gold font-bold uppercase"
+                  className="block py-3 text-amber-500 font-bold uppercase"
                 >
                   Dashboard
                 </Link>
@@ -117,7 +113,7 @@ const Header = () => {
                     handleSignOut();
                     setIsOpen(false);
                   }}
-                  className="block w-full text-left py-3 text-white font-bold uppercase hover:text-norwell-gold transition-colors"
+                  className="block w-full text-left py-3 text-white font-bold uppercase hover:text-amber-500 transition-colors"
                 >
                   Sign Out
                 </button>
@@ -126,7 +122,7 @@ const Header = () => {
               <Link
                 to="/admin/login"
                 onClick={() => setIsOpen(false)}
-                className="block py-3 text-norwell-gold font-bold uppercase"
+                className="block py-3 text-amber-500 font-bold uppercase"
               >
                 Admin Login
               </Link>
