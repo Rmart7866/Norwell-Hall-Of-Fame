@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { Trophy, Users, Image, Video, Calendar } from 'lucide-react';
 import ManageClasses from '../../components/admin/ManageClasses';
 import ManageChampionships from '../../components/admin/ManageChampionships';
+import ManageChampionshipPhotos from '../../components/admin/ManageChampionshipPhotos';
 import ManageInductees from '../../components/admin/ManageInductees';
 import ManagePhotos from '../../components/admin/ManagePhotos';
 import ManageVideos from '../../components/admin/ManageVideos';
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Trophy },
     { id: 'championships', label: 'Championships', icon: Trophy },
+    { id: 'championship-photos', label: 'Championship Photos', icon: Image },
     { id: 'classes', label: 'Manage Classes', icon: Calendar },
     { id: 'inductees', label: 'Manage Inductees', icon: Users },
     { id: 'photos', label: 'Manage Photos', icon: Image },
@@ -63,6 +65,7 @@ const Dashboard = () => {
         <div className="bg-white rounded-lg shadow-lg p-8">
           {activeTab === 'overview' && <OverviewTab />}
           {activeTab === 'championships' && <ManageChampionships />}
+          {activeTab === 'championship-photos' && <ManageChampionshipPhotos />}
           {activeTab === 'classes' && <ManageClasses />}
           {activeTab === 'inductees' && <ManageInductees />}
           {activeTab === 'photos' && <ManagePhotos />}
@@ -119,6 +122,7 @@ const OverviewTab = () => {
             <li>Use the Data Seeder above for quick testing</li>
             <li>Or manually add classes in "Manage Classes"</li>
             <li>Add inductees to classes in "Manage Inductees"</li>
+            <li>Add championships in "Championships" tab</li>
             <li>Upload photos and videos as needed</li>
           </ol>
         </div>
@@ -130,6 +134,7 @@ const OverviewTab = () => {
             <li>✅ Photos auto-load from Unsplash</li>
             <li>✅ Delete test data anytime from manage tabs</li>
             <li>✅ Check the timeline at /inductees after upload</li>
+            <li>✅ Use Championship Photos tab to add gallery images</li>
           </ul>
         </div>
       </div>

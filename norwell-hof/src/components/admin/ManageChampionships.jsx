@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, orderBy, query } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Plus, Trophy, Trash2, Edit, Search } from 'lucide-react';
+import PhotoUploader from './PhotoUploader';
 
 const ManageChampionships = () => {
   const [championships, setChampionships] = useState([]);
@@ -61,12 +62,10 @@ const ManageChampionships = () => {
 
     try {
       if (editingId) {
-        // Update existing championship
         const docRef = doc(db, 'championships', editingId);
         await updateDoc(docRef, championshipData);
         setMessage({ type: 'success', text: 'Championship updated successfully!' });
       } else {
-        // Create new championship
         await addDoc(collection(db, 'championships'), championshipData);
         setMessage({ type: 'success', text: 'Championship created successfully!' });
       }
@@ -139,6 +138,10 @@ const ManageChampionships = () => {
     });
   };
 
+  const handlePhotoUpload = (url) => {
+    setFormData({ ...formData, photoURL: url });
+  };
+
   const filteredChampionships = championships.filter((championship) =>
     championship.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     championship.sport?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -176,6 +179,21 @@ const ManageChampionships = () => {
           <h3 className="text-xl font-bold text-gray-800 mb-4">
             {editingId ? 'Edit Championship' : 'Add New Championship'}
           </h3>
+
+          {/* Photo Uploader */}
+          <div className="mb-6">
+            <PhotoUploader
+              onUploadComplete={handlePhotoUpload}
+              folder="championships"
+            />
+            {formData.photoURL && (
+              <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-800 font-semibold mb-2">✓ Photo uploaded successfully!</p>
+                <img src={formData.photoURL} alt="Preview" className="w-full h-48 object-cover rounded-lg" />
+              </div>
+            )}
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -251,23 +269,6 @@ const ManageChampionships = () => {
                 placeholder="Details about the championship..."
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-norwell-blue focus:border-transparent"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Photo URL
-              </label>
-              <input
-                type="url"
-                name="photoURL"
-                value={formData.photoURL}
-                onChange={handleChange}
-                placeholder="https://..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-norwell-blue focus:border-transparent"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Upload to Firebase Storage first, then paste the URL here
-              </p>
             </div>
 
             <div className="flex gap-3">

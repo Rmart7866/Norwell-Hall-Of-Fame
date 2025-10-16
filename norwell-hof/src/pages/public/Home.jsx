@@ -3,19 +3,21 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../firebase/config';
-import { Award, User, Download, GraduationCap, MousePointerClick } from 'lucide-react';
+import { Award, User, Download, GraduationCap, MousePointerClick, Trophy, ChevronRight } from 'lucide-react';
 
 const Home = () => {
   const [latestClass, setLatestClass] = useState(null);
   const [latestInductees, setLatestInductees] = useState([]);
+  const [latestChampionship, setLatestChampionship] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [maxCardHeight, setMaxCardHeight] = useState(0);
   const cardRefs = useRef([]);
 
   useEffect(() => {
-    const fetchLatestClass = async () => {
+    const fetchLatestData = async () => {
       try {
+        // Fetch latest class
         const classesRef = collection(db, 'classes');
         const classQuery = query(classesRef, orderBy('year', 'desc'), limit(1));
         const classSnapshot = await getDocs(classQuery);
@@ -34,15 +36,25 @@ const Home = () => {
           }));
           setLatestInductees(inducteesData);
         }
+
+        // Fetch latest championship
+        const championshipsRef = collection(db, 'championships');
+        const champQuery = query(championshipsRef, orderBy('year', 'desc'), limit(1));
+        const champSnapshot = await getDocs(champQuery);
+        
+        if (!champSnapshot.empty) {
+          const champData = { id: champSnapshot.docs[0].id, ...champSnapshot.docs[0].data() };
+          setLatestChampionship(champData);
+        }
         
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching latest class:', error);
+        console.error('Error fetching latest data:', error);
         setLoading(false);
       }
     };
 
-    fetchLatestClass();
+    fetchLatestData();
   }, []);
 
   useEffect(() => {
@@ -75,6 +87,7 @@ const Home = () => {
 
   return (
     <div>
+      {/* Hero Section */}
       <div className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(/images/banner.jpg)` }} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-blue-900/80 to-black/90"></div>
@@ -95,6 +108,7 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Latest Inductees Section */}
       <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -261,6 +275,109 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Latest Championship Section - Clean Design */}
+      {latestChampionship && (
+        <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              {/* Title */}
+              <div className="text-center mb-16">
+                <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-6" />
+                <h2 className="text-5xl md:text-6xl font-black text-white mb-4 tracking-tight">
+                  Latest Championship
+                </h2>
+                <div className="h-2 w-48 bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto"></div>
+              </div>
+
+              {/* Championship Card */}
+              <Link to={`/championships/${latestChampionship.id}`} className="block group">
+                <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.02] border border-slate-700 hover:border-yellow-400/50">
+                  <div className="md:flex">
+                    {/* Photo Side */}
+                    <div className="md:w-1/2 relative overflow-hidden bg-gradient-to-br from-slate-700 to-slate-800">
+                      {latestChampionship.photoURL ? (
+                        <img
+                          src={latestChampionship.photoURL}
+                          alt={latestChampionship.title}
+                          className="w-full h-full object-cover min-h-[400px] group-hover:scale-105 transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full min-h-[400px] flex items-center justify-center">
+                          <Trophy className="w-32 h-32 text-yellow-400/20" />
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                      
+                      {/* Year badge */}
+                      <div className="absolute top-6 right-6 bg-yellow-400 text-slate-900 px-5 py-2 rounded-lg font-black text-xl shadow-xl">
+                        {latestChampionship.year}
+                      </div>
+                    </div>
+
+                    {/* Info Side */}
+                    <div className="md:w-1/2 p-10 bg-slate-800 flex flex-col justify-center">
+                      <div className="inline-block bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 px-4 py-2 rounded-lg font-bold text-sm mb-6 self-start">
+                        CHAMPIONSHIP
+                      </div>
+                      
+                      <h3 className="text-3xl md:text-4xl font-black text-white mb-8 leading-tight">
+                        {latestChampionship.title}
+                      </h3>
+
+                      <div className="space-y-6 mb-8">
+                        <div className="flex items-start gap-4">
+                          <div className="bg-yellow-400/10 p-3 rounded-lg flex-shrink-0">
+                            <Trophy className="w-5 h-5 text-yellow-400" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Sport</p>
+                            <p className="text-lg font-bold text-white">{latestChampionship.sport}</p>
+                          </div>
+                        </div>
+
+                        {latestChampionship.coach && (
+                          <div className="flex items-start gap-4">
+                            <div className="bg-yellow-400/10 p-3 rounded-lg flex-shrink-0">
+                              <User className="w-5 h-5 text-yellow-400" />
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Coach</p>
+                              <p className="text-lg font-bold text-white">{latestChampionship.coach}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {latestChampionship.description && (
+                        <p className="text-gray-300 leading-relaxed mb-8 line-clamp-4">
+                          {latestChampionship.description}
+                        </p>
+                      )}
+
+                      <div className="inline-flex items-center gap-2 text-yellow-400 font-bold group-hover:gap-3 transition-all">
+                        <span>View Full Details</span>
+                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+
+              {/* View All Championships Link */}
+              <div className="text-center mt-12">
+                <Link
+                  to="/championships"
+                  className="inline-block bg-yellow-400 text-slate-900 px-10 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                >
+                  View All Championships
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Nomination Forms Section */}
       <section className="relative py-20 bg-slate-900 border-t-2 border-yellow-400">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-5xl mx-auto">

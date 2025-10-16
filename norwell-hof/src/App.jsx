@@ -9,6 +9,7 @@ import Footer from './components/layout/Footer';
 // Public Pages
 import Home from './pages/public/Home';
 import Championships from './pages/public/Championships';
+import ChampionshipProfile from './pages/public/ChampionshipProfile';
 import About from './pages/public/About';
 import Inductees from './pages/public/Inductees';
 import ClassDetail from './pages/public/ClassDetail';
@@ -34,6 +35,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/inductees" element={<Inductees />} />
               <Route path="/championships" element={<Championships />} />
+              <Route path="/championships/:id" element={<ChampionshipProfile />} />
               <Route path="/inductees/class/:year" element={<ClassDetail />} />
               <Route path="/inductees/:id" element={<InducteeProfile />} />
               <Route path="/athletes" element={<AthleteTimeline />} />
