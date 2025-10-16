@@ -19,6 +19,8 @@ const Header = () => {
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Inductees', path: '/inductees' },
+    { name: 'Athletes', path: '/athletes' },
+    { name: 'Championships', path: '/championships' },
     { name: 'Galleries', path: '/galleries' },
     { name: 'Videos', path: '/videos' },
   ];
@@ -29,7 +31,7 @@ const Header = () => {
         <div className="flex items-center justify-between py-8">
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <div className="h-32 shadow-2xl group-hover:shadow-amber-500/50 transition-all duration-300">
+            <div className="h-40 shadow-2xl group-hover:shadow-amber-500/50 transition-all duration-300">
               <img 
                 src="/images/logo.png" 
                 alt="Norwell Hall of Fame Logo" 
@@ -55,13 +57,13 @@ const Header = () => {
               <>
                 <Link
                   to="/admin/dashboard"
-                  className="bg-amber-500 text-blue-900 px-8 py-3 font-black text-base uppercase hover:bg-amber-400 transition-all duration-300 shadow-xl hover:shadow-amber-500/50 transform hover:scale-105 border-2 border-amber-600"
+                  className="bg-yellow-600/80 text-white px-6 py-2 font-semibold text-sm uppercase hover:bg-yellow-600 transition-all duration-300 shadow-lg hover:shadow-yellow-600/30 border border-yellow-700/50"
                 >
                   Dashboard
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="border-3 border-white text-white px-8 py-3 font-black text-base uppercase hover:bg-white hover:text-blue-900 transition-all duration-300 shadow-xl"
+                  className="border-2 border-white text-white px-6 py-2 font-semibold text-sm uppercase hover:bg-white hover:text-blue-900 transition-all duration-300 shadow-lg"
                 >
                   Sign Out
                 </button>
@@ -69,7 +71,7 @@ const Header = () => {
             ) : (
               <Link
                 to="/admin/login"
-                className="bg-amber-500 text-blue-900 px-8 py-3 font-black text-base uppercase hover:bg-amber-400 transition-all duration-300 shadow-xl hover:shadow-amber-500/50 transform hover:scale-105 border-2 border-amber-600"
+                className="bg-yellow-600/80 text-white px-6 py-2 font-semibold text-sm uppercase hover:bg-yellow-600 transition-all duration-300 shadow-lg hover:shadow-yellow-600/30 border border-yellow-700/50"
               >
                 Admin
               </Link>
@@ -104,7 +106,7 @@ const Header = () => {
                 <Link
                   to="/admin/dashboard"
                   onClick={() => setIsOpen(false)}
-                  className="block py-3 text-amber-500 font-bold uppercase"
+                  className="block py-3 text-yellow-500 font-bold uppercase"
                 >
                   Dashboard
                 </Link>
@@ -122,7 +124,7 @@ const Header = () => {
               <Link
                 to="/admin/login"
                 onClick={() => setIsOpen(false)}
-                className="block py-3 text-amber-500 font-bold uppercase"
+                className="block py-3 text-yellow-500 font-bold uppercase"
               >
                 Admin Login
               </Link>

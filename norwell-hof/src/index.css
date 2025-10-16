@@ -19,6 +19,7 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Custom Scrollbar - Updated to yellow gold */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -28,15 +29,29 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #d97706, #b45309);
+  background: linear-gradient(180deg, #eab308, #ca8a04);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #f59e0b, #d97706);
+  background: linear-gradient(180deg, #facc15, #eab308);
 }
 
-/* Banner Text Animations */
+/* ========================================
+   ANIMATION KEYFRAMES
+======================================== */
+
+/* Fade In */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+  }
+  to { 
+    opacity: 1; 
+  }
+}
+
+/* Slide Animations */
 @keyframes slideInLeft {
   from {
     transform: translateX(-100px);
@@ -59,6 +74,17 @@ html {
   }
 }
 
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @keyframes fadeInUp {
   from {
     transform: translateY(30px);
@@ -70,15 +96,70 @@ html {
   }
 }
 
+/* Expand Animation */
 @keyframes expand {
   from {
     width: 0;
     opacity: 0;
   }
   to {
-    width: 16rem; /* w-64 */
+    width: 16rem;
     opacity: 1;
   }
+}
+
+/* Timeline Animations */
+@keyframes draw-line {
+  from {
+    transform: translateX(-50%) scaleY(0);
+  }
+  to {
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+
+@keyframes timelineDot {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Timeline Item Slide In */
+@keyframes timelineSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card Drop Animation - Enhanced with bounce */
+@keyframes cardDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.8) rotateZ(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateZ(0deg);
+  }
+}
+
+/* ========================================
+   ANIMATION CLASSES
+======================================== */
+
+.animate-fade-in {
+  animation: fadeIn 1.2s ease-out forwards;
+  opacity: 0;
 }
 
 .animate-slide-in-left {
@@ -89,6 +170,11 @@ html {
   animation: slideInRight 1s ease-out forwards;
 }
 
+.animate-slide-up {
+  animation: slideUp 1s ease-out forwards;
+  opacity: 0;
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 1s ease-out forwards;
 }
@@ -97,7 +183,14 @@ html {
   animation: expand 1s ease-out forwards;
 }
 
-/* Animation delays */
+.animate-draw-line {
+  animation: draw-line 2s ease-out forwards;
+}
+
+/* ========================================
+   ANIMATION DELAYS
+======================================== */
+
 .animation-delay-200 {
   animation-delay: 0.2s;
   opacity: 0;
@@ -118,29 +211,15 @@ html {
   opacity: 0;
 }
 
-/* Existing Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* ========================================
+   3D CARD EFFECTS
+======================================== */
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-@keyframes slideUp {
-  from { 
-    transform: translateY(30px); 
-    opacity: 0; 
-  }
-  to { 
-    transform: translateY(0); 
-    opacity: 1; 
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 1.2s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-slide-up {
-  animation: slideUp 1s ease-out forwards;
-  opacity: 0;
+.perspective-1000 {
+  perspective: 1000px;
 }
