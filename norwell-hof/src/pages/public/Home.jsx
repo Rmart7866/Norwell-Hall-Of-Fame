@@ -74,6 +74,14 @@ const Home = () => {
     }
   }, [latestInductees, loading]);
 
+  const getObjectPosition = (position) => {
+    switch(position) {
+      case 'top': return 'object-top';
+      case 'bottom': return 'object-bottom';
+      default: return 'object-center';
+    }
+  };
+
   const nominationForms = [
     { name: 'Athlete Nomination Cover Letter', file: '/forms/athlete-cover-letter.pdf' },
     { name: 'Athlete Nomination Forms', file: '/forms/athlete-nomination.pdf' },
@@ -157,7 +165,11 @@ const Home = () => {
                           <div className="bg-white rounded-md overflow-hidden shadow-lg h-full flex flex-col">
                             <div className="relative h-80 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden flex-shrink-0">
                               {inductee.photoURL ? (
-                                <img src={inductee.photoURL} alt={inductee.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <img 
+                                  src={inductee.photoURL} 
+                                  alt={inductee.name} 
+                                  className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${getObjectPosition(inductee.photoPosition)}`}
+                                />
                               ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-slate-900">
                                   <User className="w-32 h-32 text-yellow-400 opacity-50 mb-4" />
@@ -168,12 +180,7 @@ const Home = () => {
                               <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-3 py-1 rounded-full font-black text-sm shadow-lg border-2 border-white">
                                 '{latestClass.year.toString().slice(-2)}
                               </div>
-                              {inductee.secondPhotoURL && (
-                                <div className="absolute bottom-3 left-3 bg-slate-900/80 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 animate-pulse">
-                                  <MousePointerClick className="w-3 h-3" />
-                                  Hover to flip
-                                </div>
-                              )}
+                            
                               <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-yellow-400"></div>
                               <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-yellow-400"></div>
                             </div>
@@ -233,7 +240,11 @@ const Home = () => {
                             <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-amber-900 rounded-br"></div>
                             <div className="bg-white rounded-md overflow-hidden shadow-lg h-full flex flex-col">
                               <div className="relative flex-1 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden">
-                                <img src={inductee.secondPhotoURL} alt={`${inductee.name} - alternate`} className="w-full h-full object-cover" />
+                                <img 
+                                  src={inductee.secondPhotoURL} 
+                                  alt={`${inductee.name} - alternate`} 
+                                  className={`w-full h-full object-cover ${getObjectPosition(inductee.secondPhotoPosition)}`}
+                                />
                                 <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-3 py-1 rounded-full font-black text-sm shadow-lg border-2 border-white">
                                   '{latestClass.year.toString().slice(-2)}
                                 </div>
@@ -275,12 +286,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Latest Championship Section - Clean Design */}
+      {/* Latest Championship Section */}
       {latestChampionship && (
         <section className="py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              {/* Title */}
               <div className="text-center mb-16">
                 <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-6" />
                 <h2 className="text-5xl md:text-6xl font-black text-white mb-4 tracking-tight">
@@ -289,11 +299,9 @@ const Home = () => {
                 <div className="h-2 w-48 bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto"></div>
               </div>
 
-              {/* Championship Card */}
               <Link to={`/championships/${latestChampionship.id}`} className="block group">
                 <div className="bg-slate-800 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.02] border border-slate-700 hover:border-yellow-400/50">
                   <div className="md:flex">
-                    {/* Photo Side */}
                     <div className="md:w-1/2 relative overflow-hidden bg-gradient-to-br from-slate-700 to-slate-800">
                       {latestChampionship.photoURL ? (
                         <img
@@ -307,14 +315,11 @@ const Home = () => {
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-                      
-                      {/* Year badge */}
                       <div className="absolute top-6 right-6 bg-yellow-400 text-slate-900 px-5 py-2 rounded-lg font-black text-xl shadow-xl">
                         {latestChampionship.year}
                       </div>
                     </div>
 
-                    {/* Info Side */}
                     <div className="md:w-1/2 p-10 bg-slate-800 flex flex-col justify-center">
                       <div className="inline-block bg-yellow-400/10 text-yellow-400 border border-yellow-400/30 px-4 py-2 rounded-lg font-bold text-sm mb-6 self-start">
                         CHAMPIONSHIP
@@ -363,7 +368,6 @@ const Home = () => {
                 </div>
               </Link>
 
-              {/* View All Championships Link */}
               <div className="text-center mt-12">
                 <Link
                   to="/championships"

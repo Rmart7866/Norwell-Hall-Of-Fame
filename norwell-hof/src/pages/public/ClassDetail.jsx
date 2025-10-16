@@ -1,3 +1,4 @@
+// src/pages/public/ClassDetail.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getInducteesByClass } from '../../firebase/firestore';
@@ -29,10 +30,8 @@ const ClassDetail = () => {
     fetchInductees();
   }, [year]);
 
-  // Calculate max card height after cards render
   useEffect(() => {
     if (inductees.length > 0 && cardRefs.current.length > 0) {
-      // Wait for images to load and layout to settle
       const timer = setTimeout(() => {
         const heights = cardRefs.current
           .filter(ref => ref !== null)
@@ -47,6 +46,14 @@ const ClassDetail = () => {
       return () => clearTimeout(timer);
     }
   }, [inductees, loading]);
+
+  const getObjectPosition = (position) => {
+    switch(position) {
+      case 'top': return 'object-top';
+      case 'bottom': return 'object-bottom';
+      default: return 'object-center';
+    }
+  };
 
   if (loading) {
     return (
@@ -128,7 +135,6 @@ const ClassDetail = () => {
                     transform: 'translateY(-50px) rotateX(20deg)'
                   }}
                 >
-                  {/* Baseball Card - Dynamic Height Container */}
                   <div 
                     ref={el => cardRefs.current[index] = el}
                     className="relative transition-all duration-300 ease-out"
@@ -142,27 +148,23 @@ const ClassDetail = () => {
                     
                     {/* Front of Card */}
                     <div className="relative backface-hidden h-full" style={{ backfaceVisibility: 'hidden' }}>
-                      {/* Card Container with vintage border */}
                       <div className="relative bg-gradient-to-br from-amber-200 to-amber-100 rounded-lg p-2 shadow-2xl border-4 border-amber-700 transition-all duration-300 group-hover:shadow-amber-900/80 h-full" 
                            style={{
                              transform: hoveredCard === inductee.id && !inductee.secondPhotoURL ? 'translateY(-12px)' : 'translateY(0)',
                            }}>
                         
-                        {/* Simple Elegant Corner Decorations */}
                         <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-amber-900 rounded-tl"></div>
                         <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-amber-900 rounded-tr"></div>
                         <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-amber-900 rounded-bl"></div>
                         <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-amber-900 rounded-br"></div>
 
-                        {/* Inner Card - Flex container for consistent sizing */}
                         <div className="bg-white rounded-md overflow-hidden shadow-lg h-full flex flex-col">
-                          {/* Photo Section - Fixed Height */}
                           <div className="relative h-80 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden flex-shrink-0">
                             {inductee.photoURL ? (
                               <img
                                 src={inductee.photoURL}
                                 alt={inductee.name}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${getObjectPosition(inductee.photoPosition)}`}
                               />
                             ) : (
                               <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-slate-900">
@@ -172,12 +174,10 @@ const ClassDetail = () => {
                               </div>
                             )}
                             
-                            {/* Year Badge */}
                             <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-3 py-1 rounded-full font-black text-sm shadow-lg border-2 border-white">
                               '{year.toString().slice(-2)}
                             </div>
                             
-                            {/* Hover to flip indicator */}
                             {inductee.secondPhotoURL && (
                               <div className="absolute bottom-3 left-3 bg-slate-900/80 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 animate-pulse">
                                 <MousePointerClick className="w-3 h-3" />
@@ -185,19 +185,15 @@ const ClassDetail = () => {
                               </div>
                             )}
                             
-                            {/* Corner decorations */}
                             <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-yellow-400"></div>
                             <div className="absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 border-yellow-400"></div>
                           </div>
 
-                          {/* Info Section - Flex to fill remaining space */}
                           <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-4 border-t-4 border-yellow-400 flex-1 flex flex-col">
-                            {/* Name */}
                             <h3 className="text-xl font-black text-white mb-2 tracking-tight uppercase text-center leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                               {inductee.name || 'Name Unavailable'}
                             </h3>
                             
-                            {/* Stats Box - Flex to fill space */}
                             <div className="bg-yellow-400/10 border-2 border-yellow-400/30 rounded-md p-3 flex-1 flex flex-col justify-center">
                               {inductee.sport && (
                                 <div className="text-center mb-2">
@@ -233,7 +229,6 @@ const ClassDetail = () => {
                               )}
                             </div>
 
-                            {/* View Profile Button */}
                             <div className="mt-3 text-center">
                               <span className="inline-block bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-4 py-2 rounded-md font-black text-sm uppercase group-hover:from-amber-300 group-hover:to-amber-400 transition-all shadow-lg transform group-hover:scale-105" style={{ fontFamily: 'Georgia, serif' }}>
                                 View Profile →
@@ -244,11 +239,10 @@ const ClassDetail = () => {
                       </div>
                     </div>
 
-                    {/* Back of Card (if second photo exists) */}
+                    {/* Back of Card */}
                     {inductee.secondPhotoURL && (
                       <div className="absolute inset-0 backface-hidden h-full" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
                         <div className="relative bg-gradient-to-br from-amber-200 to-amber-100 rounded-lg p-2 shadow-2xl border-4 border-amber-700 h-full">
-                          {/* Corner Decorations */}
                           <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-amber-900 rounded-tl"></div>
                           <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-amber-900 rounded-tr"></div>
                           <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-amber-900 rounded-bl"></div>
@@ -259,7 +253,7 @@ const ClassDetail = () => {
                               <img
                                 src={inductee.secondPhotoURL}
                                 alt={`${inductee.name} - alternate`}
-                                className="w-full h-full object-cover"
+                                className={`w-full h-full object-cover ${getObjectPosition(inductee.secondPhotoPosition)}`}
                               />
                               <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 px-3 py-1 rounded-full font-black text-sm shadow-lg border-2 border-white">
                                 '{year.toString().slice(-2)}
@@ -278,7 +272,6 @@ const ClassDetail = () => {
                       </div>
                     )}
 
-                    {/* Enhanced Card Shadow Effect - Dramatic Lifting Shadow */}
                     <div 
                       className="absolute inset-0 bg-slate-900 rounded-lg -z-10 blur-xl transition-all duration-300"
                       style={{

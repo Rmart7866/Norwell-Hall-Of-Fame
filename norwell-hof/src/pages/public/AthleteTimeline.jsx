@@ -244,13 +244,7 @@ const AthleteTimeline = () => {
                                                   '{year.toString().slice(-2)}
                                                 </div>
 
-                                                {/* Hover to flip indicator */}
-                                                {athlete.secondPhotoURL && (
-                                                  <div className="absolute bottom-3 left-3 bg-slate-900/80 text-yellow-500 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 animate-pulse">
-                                                    <MousePointerClick className="w-3 h-3" />
-                                                    Hover to flip
-                                                  </div>
-                                                )}
+                                             
 
                                                 {/* Corner decorations */}
                                                 <div className="absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 border-yellow-500"></div>

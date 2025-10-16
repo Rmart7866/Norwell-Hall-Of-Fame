@@ -29,13 +29,40 @@ const InducteeProfile = () => {
       
       // Fetch photos
       const { data: photosData } = await getPhotosByInductee(id);
-      setPhotos(photosData || []);
       
+      // Combine gallery photos with secondary photo if it exists
+      let allPhotos = photosData || [];
+      
+      // Add secondary photo to gallery if it exists and isn't already in photos
+      if (inducteeData.secondPhotoURL) {
+        const secondPhotoExists = allPhotos.some(p => p.url === inducteeData.secondPhotoURL);
+        if (!secondPhotoExists) {
+          allPhotos = [
+            {
+              id: 'secondary',
+              url: inducteeData.secondPhotoURL,
+              caption: 'Alternate Photo',
+              order: -1 // Put it first
+            },
+            ...allPhotos
+          ];
+        }
+      }
+      
+      setPhotos(allPhotos);
       setLoading(false);
     };
 
     fetchInducteeData();
   }, [id]);
+
+  const getObjectPosition = (position) => {
+    switch(position) {
+      case 'top': return 'object-top';
+      case 'bottom': return 'object-bottom';
+      default: return 'object-center';
+    }
+  };
 
   if (loading) {
     return (
@@ -76,13 +103,7 @@ const InducteeProfile = () => {
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
-          <Link
-            to={`/inductees/class/${inductee.classYear}`}
-            className="inline-flex items-center gap-2 text-yellow-500 hover:text-yellow-400 transition mb-6 font-semibold"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Class of {inductee.classYear}
-          </Link>
+          
 
           <div className="text-center mb-8">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
@@ -108,8 +129,7 @@ const InducteeProfile = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Main Profile Card */}
-            <div className="bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden shadow-2xl">
-              {/* Subtle top accent */}
+            <div className="bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden shadow-2xl relative">
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"></div>
 
               <div className="md:flex">
@@ -214,14 +234,23 @@ const InducteeProfile = () => {
                   {photos.map((photo) => (
                     <div
                       key={photo.id}
-                      className="aspect-square bg-slate-700 rounded-lg overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-yellow-500/20 transition-all hover:scale-105"
-                      onClick={() => setSelectedPhoto(photo.url)}
+                      className="group aspect-square bg-slate-700 rounded-lg overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-yellow-500/20 transition-all hover:scale-105 relative"
+                      onClick={() => setSelectedPhoto(photo)}
                     >
                       <img
                         src={photo.url}
                         alt={photo.caption || 'Photo'}
                         className="w-full h-full object-cover"
                       />
+                      
+                      {/* Caption overlay on hover */}
+                      {photo.caption && (
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                          <p className="text-white text-sm p-3 font-medium">
+                            {photo.caption}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -242,21 +271,31 @@ const InducteeProfile = () => {
       {/* Photo Modal */}
       {selectedPhoto && (
         <div
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedPhoto(null)}
         >
-          <div className="max-w-6xl max-h-[90vh] relative">
-            <button
-              onClick={() => setSelectedPhoto(null)}
-              className="absolute -top-12 right-0 text-white text-4xl hover:text-yellow-500 transition"
-            >
-              ×
-            </button>
+          <button
+            onClick={() => setSelectedPhoto(null)}
+            className="absolute top-6 right-6 text-white hover:text-yellow-500 transition-colors text-4xl font-light leading-none"
+            style={{ width: '40px', height: '40px' }}
+          >
+            ×
+          </button>
+
+          <div className="max-w-7xl max-h-[90vh] relative" onClick={(e) => e.stopPropagation()}>
             <img
-              src={selectedPhoto}
-              alt="Full size"
+              src={selectedPhoto.url}
+              alt={selectedPhoto.caption || 'Full size photo'}
               className="max-w-full max-h-[90vh] object-contain rounded-lg"
             />
+            
+            {selectedPhoto.caption && (
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6 rounded-b-lg">
+                <p className="text-white text-xl font-semibold text-center">
+                  {selectedPhoto.caption}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}
