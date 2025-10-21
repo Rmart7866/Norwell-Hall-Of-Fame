@@ -59,3 +59,81 @@ export const deleteInducteeWithPhoto = async (inductee) => {
         return { error: error.message };
     }
 };
+
+/**
+ * Deletes an Induction Class document from Firestore.
+ * This is designed for simple documents that do not have associated files 
+ * in Firebase Storage (like inductee profile photos).
+ * * @param {string} classId - The unique ID of the document to delete.
+ * @returns {object} - An object with an 'error' property if deletion fails, otherwise { error: null }.
+ */
+export const deleteInductionClass = async (classId) => {
+    try {
+        const docRef = doc(db, "classes", classId); // Assuming collection is named "classes"
+        await deleteDoc(docRef);
+        
+        console.log(`✅ Firestore: Deleted class document with ID: ${classId}`);
+        
+        return { error: null };
+
+    } catch (error) {
+        console.error('❌ Error during class document deletion:', error);
+        return { error: error.message };
+    }
+};
+
+export const deleteChampionshipWithPhoto = async (championship) => {
+    try {
+        const championshipId = championship.id;
+        const photoURL = championship.photoURL;
+
+        // --- STEP 1: DELETE THE PHOTO FROM FIREBASE STORAGE ---
+        if (photoURL && photoURL.startsWith('https://firebasestorage.googleapis.com')) {
+            try {
+                const url = new URL(photoURL);
+                const filePath = url.pathname;
+                
+                // Extract path after '/o/' (the file path in the bucket)
+                const storagePathSegment = filePath.split('/o/')[1];
+                
+                if (storagePathSegment) {
+                    const storagePath = decodeURIComponent(storagePathSegment.split('?')[0]);
+                    
+                    const photoRef = ref(storage, storagePath); 
+                    await deleteObject(photoRef);
+                    console.log(`✅ Storage: Deleted championship photo at path: ${storagePath}`);
+                }
+            } catch (storageError) {
+                // Log warning and continue with document deletion
+                console.warn(`⚠️ Warning: Failed to delete championship photo. Continuing with document deletion.`, storageError);
+            }
+        }
+
+        // --- STEP 2: DELETE THE FIRESTORE DOCUMENT ---
+        const docRef = doc(db, "championships", championshipId);
+        await deleteDoc(docRef);
+        
+        console.log(`✅ Firestore: Deleted championship document: ${championship.title}`);
+        
+        return { error: null };
+
+    } catch (error) {
+        console.error('❌ Error during championship deletion:', error);
+        return { error: error.message };
+    }
+};
+
+export const deleteVideo = async (videoId) => {
+    try {
+        const docRef = doc(db, "videos", videoId);
+        await deleteDoc(docRef);
+        
+        console.log(`✅ Firestore: Deleted video document with ID: ${videoId}`);
+        
+        return { error: null };
+
+    } catch (error) {
+        console.error('❌ Error during video document deletion:', error);
+        return { error: error.message };
+    }
+};
