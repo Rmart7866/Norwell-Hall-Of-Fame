@@ -26,12 +26,12 @@ const Header = () => {
   ];
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/40 to-transparent">
+    <header className="sticky top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/90 via-black/70 to-transparent backdrop-blur-sm">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-8">
+        <div className="flex items-center justify-between py-3 lg:py-6">
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <div className="h-40 shadow-2xl group-hover:shadow-amber-500/50 transition-all duration-300">
+            <div className="h-14 sm:h-20 lg:h-32 shadow-2xl group-hover:shadow-amber-500/50 transition-all duration-300">
               <img 
                 src="/images/logo.png" 
                 alt="Norwell Hall of Fame Logo" 
@@ -81,7 +81,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+            className="lg:hidden p-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors rounded-md"
           >
             {isOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
           </button>
@@ -89,7 +89,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <nav className="lg:hidden pb-6 bg-norwell-blue/95 backdrop-blur-sm mt-2 p-4 shadow-xl">
+          <nav className="lg:hidden pb-4 bg-norwell-blue/95 backdrop-blur-sm mt-2 p-4 rounded-lg shadow-xl">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
