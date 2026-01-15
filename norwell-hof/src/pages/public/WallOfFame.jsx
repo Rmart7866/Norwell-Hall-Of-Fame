@@ -61,32 +61,61 @@ const WallOfFame = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
-      {/* Header Section */}
-      <section className="py-12 relative overflow-hidden border-b-4 border-yellow-400">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-400 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-10 right-10 w-80 h-80 bg-yellow-400 rounded-full blur-3xl animate-pulse delay-700"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition mb-6 font-semibold"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Home
-          </Link>
-
-          <div className="text-center">
-            <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6" />
-            <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
-              Wall of Fame
-            </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Celebrating excellence in Norwell athletics
-            </p>
+      {/* Header Section with Banner Image */}
+      <section className="relative overflow-hidden">
+        {pageData?.bannerImage ? (
+          <div className="relative h-[500px]">
+            <img
+              src={pageData.bannerImage}
+              alt="Wall of Fame Banner"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+            <div className="absolute inset-0 flex items-center">
+              <div className="container mx-auto px-4">
+                <Link
+                  to="/"
+                  className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition mb-6 font-semibold"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  Back to Home
+                </Link>
+                <Trophy className="w-20 h-20 text-yellow-400 mb-6" />
+                <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
+                  Wall of Fame
+                </h1>
+                <div className="h-2 w-32 bg-gradient-to-r from-yellow-400 to-transparent"></div>
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="py-12 relative border-b-4 border-yellow-400">
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-400 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-10 right-10 w-80 h-80 bg-yellow-400 rounded-full blur-3xl animate-pulse delay-700"></div>
+            </div>
+            
+            <div className="container mx-auto px-4 relative z-10">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition mb-6 font-semibold"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Home
+              </Link>
+
+              <div className="text-center">
+                <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6" />
+                <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
+                  Wall of Fame
+                </h1>
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                  Celebrating excellence in Norwell athletics
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Main Content Section */}
@@ -114,7 +143,7 @@ const WallOfFame = () => {
                   Gallery
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {pageData.photos.map((photo, index) => (
                     <div
                       key={index}
