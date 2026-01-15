@@ -64,7 +64,7 @@ const WallOfFame = () => {
       {/* Header Section with Banner Image */}
       <section className="relative overflow-hidden">
         {pageData?.bannerImage ? (
-          <div className="relative h-[400px]">
+          <div className="relative h-[300px]">
             <img
               src={pageData.bannerImage}
               alt="Wall of Fame Banner"
@@ -73,7 +73,7 @@ const WallOfFame = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
             <div className="absolute inset-0 flex items-center">
               <div className="container mx-auto px-4">
-                <h1 className="text-5xl md:text-6xl font-black text-white mb-4 tracking-tight">
+                <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
                   Wall of Fame
                 </h1>
                 <div className="h-2 w-32 bg-gradient-to-r from-yellow-400 to-transparent"></div>
