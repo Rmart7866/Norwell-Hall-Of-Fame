@@ -134,14 +134,14 @@ const AthleteCard = ({ athlete }) => {
                         <div className="flex items-center justify-center gap-2 mb-1">
                           <Award className="w-4 h-4 text-yellow-400" />
                           <span className="text-gray-400 text-xs font-bold uppercase" style={{ fontFamily: 'Georgia, serif' }}>
-                            Sport{(sport.includes(',') || sport.includes('&')) ? 's' : ''}
+                            Sport{(sport.includes(',') || sport.includes('&') || sport.includes('-')) ? 's' : ''}
                           </span>
                         </div>
-                        <div className="text-white font-bold text-sm leading-relaxed">
-                          {sport.split(/[,&]/).map((s, idx, arr) => (
+                        <div className="text-white font-bold text-xs leading-tight px-2">
+                          {sport.split(/[,&]|(?:\s+-\s+)/).map((s, idx, arr) => (
                             <span key={idx}>
                               {s.trim()}
-                              {idx < arr.length - 1 && <span className="text-yellow-400 mx-1">•</span>}
+                              {idx < arr.length - 1 && <span className="text-yellow-400 mx-0.5">•</span>}
                             </span>
                           ))}
                         </div>
