@@ -11,6 +11,7 @@ import ManagePhotos from '../../components/admin/ManagePhotos';
 import ManageVideos from '../../components/admin/ManageVideos';
 import ManageAboutPage from '../../components/admin/ManageAboutPage';
 import ManageHomeBanner from '../../components/admin/ManageHomeBanner';
+import ManageWallOfFame from '../../components/admin/ManageWallOfFame';
 import DataSeeder from '../../components/admin/DataSeeder';
 
 const Dashboard = () => {
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Trophy },
     { id: 'home-banner', label: 'Home Banner', icon: Home },
+    { id: 'wall-of-fame', label: 'Wall of Fame', icon: Trophy },
     { id: 'about-page', label: 'About Page', icon: FileText },
     { id: 'championships', label: 'Championships', icon: Trophy },
     { id: 'championship-photos', label: 'Championship Photos', icon: Image },
@@ -69,6 +71,7 @@ const Dashboard = () => {
         <div className="bg-white rounded-lg shadow-lg p-8">
           {activeTab === 'overview' && <OverviewTab />}
           {activeTab === 'home-banner' && <ManageHomeBanner />}
+          {activeTab === 'wall-of-fame' && <ManageWallOfFame />}
           {activeTab === 'about-page' && <ManageAboutPage />}
           {activeTab === 'championships' && <ManageChampionships />}
           {activeTab === 'championship-photos' && <ManageChampionshipPhotos />}
