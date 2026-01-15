@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Link } from 'react-router-dom';
-import { Trophy, ArrowLeft, Image as ImageIcon, Play, X } from 'lucide-react';
+import { X, Image as ImageIcon } from 'lucide-react';
 
 const WallOfFame = () => {
   const [pageData, setPageData] = useState(null);
@@ -64,24 +64,16 @@ const WallOfFame = () => {
       {/* Header Section with Banner Image */}
       <section className="relative overflow-hidden">
         {pageData?.bannerImage ? (
-          <div className="relative h-[500px]">
+          <div className="relative h-[400px]">
             <img
               src={pageData.bannerImage}
               alt="Wall of Fame Banner"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
             <div className="absolute inset-0 flex items-center">
               <div className="container mx-auto px-4">
-                <Link
-                  to="/"
-                  className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition mb-6 font-semibold"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                  Back to Home
-                </Link>
-                <Trophy className="w-20 h-20 text-yellow-400 mb-6" />
-                <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
+                <h1 className="text-5xl md:text-6xl font-black text-white mb-4 tracking-tight">
                   Wall of Fame
                 </h1>
                 <div className="h-2 w-32 bg-gradient-to-r from-yellow-400 to-transparent"></div>
@@ -96,16 +88,7 @@ const WallOfFame = () => {
             </div>
             
             <div className="container mx-auto px-4 relative z-10">
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 transition mb-6 font-semibold"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                Back to Home
-              </Link>
-
               <div className="text-center">
-                <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6" />
                 <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
                   Wall of Fame
                 </h1>
@@ -137,11 +120,6 @@ const WallOfFame = () => {
             {pageData?.photos && pageData.photos.length > 0 && (
               <div className="bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl p-10 shadow-2xl relative">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
-                
-                <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                  <ImageIcon className="w-8 h-8 text-yellow-400" />
-                  Gallery
-                </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {pageData.photos.map((photo, index) => (
@@ -168,11 +146,6 @@ const WallOfFame = () => {
             {pageData?.videoURL && (
               <div className="bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl p-10 shadow-2xl relative">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
-                
-                <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                  <Play className="w-8 h-8 text-yellow-400" />
-                  Featured Video
-                </h2>
 
                 <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border-4 border-yellow-400/30">
                   <iframe
@@ -189,7 +162,6 @@ const WallOfFame = () => {
             {/* Empty State */}
             {!pageData && (
               <div className="text-center py-20 bg-slate-800/50 border-2 border-dashed border-yellow-400/30 rounded-xl">
-                <Trophy className="w-24 h-24 mx-auto mb-6 text-yellow-400/70" />
                 <h2 className="text-4xl font-bold text-white mb-4">
                   Wall of Fame Coming Soon
                 </h2>
