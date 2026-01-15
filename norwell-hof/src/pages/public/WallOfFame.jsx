@@ -80,20 +80,6 @@ const WallOfFame = () => {
         </div>
       </section>
 
-      {/* Banner Image Section */}
-      {pageData?.bannerImage && (
-        <section className="relative overflow-hidden">
-          <div className="relative h-[300px]">
-            <img
-              src={pageData.bannerImage}
-              alt="Wall of Fame Banner"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
-          </div>
-        </section>
-      )}
-
       {/* Main Content Section */}
       <section className="py-16 pb-24">
         <div className="container mx-auto px-4">
@@ -148,6 +134,20 @@ const WallOfFame = () => {
                     allowFullScreen
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   />
+                </div>
+              </div>
+            )}
+
+            {/* Banner Image Section - Moved to bottom of content */}
+            {pageData?.bannerImage && (
+              <div className="relative overflow-hidden rounded-xl shadow-2xl">
+                <div className="relative h-[400px]">
+                  <img
+                    src={pageData.bannerImage}
+                    alt="Wall of Fame Banner"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
                 </div>
               </div>
             )}
