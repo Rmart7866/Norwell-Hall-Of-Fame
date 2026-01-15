@@ -19,8 +19,8 @@ const getObjectPosition = (position) => {
 
 /**
  * Normalizes and cleans sport display
- * - Consolidates Track/Field/Track & Field into one "Track & Field"
- * - Keeps all other sports separate
+ * - Consolidates ONLY standalone Track/Field/Track & Field into one "Track & Field"
+ * - Keeps "Track Coach", "Field Hockey", etc. as separate sports
  */
 const normalizeSportDisplay = (sport) => {
   if (!sport) return sport;
@@ -30,15 +30,17 @@ const normalizeSportDisplay = (sport) => {
     .map(s => s.trim())
     .filter(s => s);
   
-  // Check if we have any track/field variants
+  // Check if we have any standalone track/field variants (not part of other words)
   const hasTrackOrField = sports.some(s => {
     const lower = s.toLowerCase();
+    // Only match if it's EXACTLY "track", "field", or "track & field"
     return lower === 'track' || lower === 'field' || lower === 'track & field';
   });
   
-  // Filter out ALL track/field variants
+  // Filter out ONLY standalone track/field variants
   const otherSports = sports.filter(s => {
     const lower = s.toLowerCase();
+    // Keep it if it's NOT exactly "track", "field", or "track & field"
     return lower !== 'track' && lower !== 'field' && lower !== 'track & field';
   });
   
@@ -129,7 +131,7 @@ const AthleteCard = ({ athlete }) => {
               <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-amber-900 rounded-tl"></div>
               <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-amber-900 rounded-tr"></div>
               <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-amber-900 rounded-bl"></div>
-              <div className="absolute -top-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-amber-900 rounded-br"></div>
+              <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-amber-900 rounded-br"></div>
 
               <div className="bg-white rounded-md overflow-hidden shadow-lg h-full flex flex-col">
                 <div className="relative h-80 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden flex-shrink-0">
@@ -292,6 +294,7 @@ const AthleteTimeline = () => {
           const trimmedSport = sport.trim();
           const lowerSport = trimmedSport.toLowerCase();
           
+          // Only match EXACT standalone "track", "field", or "Track & Field"
           if (lowerSport === 'track' || lowerSport === 'field' || trimmedSport === 'Track & Field') {
             hasTrackOrField = true;
           } else if (!lowerSport.includes('coach')) {
@@ -344,6 +347,7 @@ const AthleteTimeline = () => {
         }
         
         if (filterSport === 'Track & Field') {
+          // Match standalone "track", "field", or "track & field" only
           return athlete.sport.split(/[,&]|(?:\s+-\s+)/).some(s => {
             const trimmed = s.trim().toLowerCase();
             return trimmed === 'track' || trimmed === 'field' || s.trim() === 'Track & Field';
