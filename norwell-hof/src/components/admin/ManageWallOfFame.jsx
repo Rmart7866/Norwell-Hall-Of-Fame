@@ -8,9 +8,12 @@ import { Image, Save, AlertCircle, CheckCircle, X, Play } from 'lucide-react';
 const ManageWallOfFame = () => {
   const [pageData, setPageData] = useState({
     description: '',
+    bannerImage: '',
     photos: [],
     videoURL: ''
   });
+  const [bannerFile, setBannerFile] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState(null);
   const [photoFiles, setPhotoFiles] = useState([]);
   const [photoPreviews, setPhotoPreviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,12 +35,32 @@ const ManageWallOfFame = () => {
         const data = docSnap.data();
         setPageData(data);
         setPhotoPreviews(data.photos || []);
+        setBannerPreview(data.bannerImage || null);
       }
       setLoading(false);
     } catch (error) {
       console.error('Error fetching Wall of Fame data:', error);
       showMessage('error', 'Error loading Wall of Fame data');
       setLoading(false);
+    }
+  };
+
+  const handleBannerChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileName = file.name.toLowerCase();
+      if (fileName.endsWith('.heic') || fileName.endsWith('.heif')) {
+        showMessage('error', 'HEIC files are not supported. Please convert to JPG or PNG first.');
+        e.target.value = '';
+        return;
+      }
+
+      setBannerFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setBannerPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -91,6 +114,24 @@ const ManageWallOfFame = () => {
     }
   };
 
+  const uploadBanner = async () => {
+    if (!bannerFile) return pageData.bannerImage;
+
+    setUploading(true);
+    try {
+      const timestamp = Date.now();
+      const storageRef = ref(storage, `wall-of-fame/banner-${timestamp}`);
+      await uploadBytes(storageRef, bannerFile);
+      const downloadURL = await getDownloadURL(storageRef);
+      setUploading(false);
+      return downloadURL;
+    } catch (error) {
+      console.error('Error uploading banner:', error);
+      setUploading(false);
+      throw error;
+    }
+  };
+
   const uploadPhotos = async () => {
     if (photoFiles.length === 0) return pageData.photos;
 
@@ -119,7 +160,12 @@ const ManageWallOfFame = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
+      let bannerImage = pageData.bannerImage;
       let photos = pageData.photos;
+      
+      if (bannerFile) {
+        bannerImage = await uploadBanner();
+      }
       
       if (photoFiles.length > 0) {
         photos = await uploadPhotos();
@@ -127,6 +173,7 @@ const ManageWallOfFame = () => {
 
       const dataToSave = {
         description: pageData.description,
+        bannerImage: bannerImage,
         photos: photos,
         videoURL: pageData.videoURL,
         updatedAt: new Date().toISOString()
@@ -136,6 +183,7 @@ const ManageWallOfFame = () => {
       await setDoc(docRef, dataToSave);
       
       setPageData(dataToSave);
+      setBannerFile(null);
       setPhotoFiles([]);
       showMessage('success', 'Wall of Fame updated successfully!');
       setSaving(false);
@@ -188,6 +236,34 @@ const ManageWallOfFame = () => {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-norwell-blue focus:border-transparent"
             placeholder="Enter Wall of Fame description..."
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Banner Image
+          </label>
+          <p className="text-xs text-gray-500 mb-2">
+            Large hero image that appears at the top of the page
+          </p>
+          <input
+            type="file"
+            accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+            onChange={handleBannerChange}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-norwell-blue file:text-white hover:file:bg-blue-700 mb-4"
+          />
+          
+          {bannerPreview && (
+            <div className="relative border-2 border-gray-300 rounded-lg overflow-hidden">
+              <img
+                src={bannerPreview}
+                alt="Banner preview"
+                className="w-full h-64 object-cover"
+              />
+              <div className="absolute top-2 right-2 bg-black/50 text-white px-3 py-1 rounded-lg text-sm">
+                Banner Preview
+              </div>
+            </div>
+          )}
         </div>
 
         <div>
@@ -247,37 +323,52 @@ const ManageWallOfFame = () => {
 
         <div className="border-t-2 border-gray-200 pt-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Preview</h3>
-          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 rounded-xl p-8 space-y-8">
-            {pageData.description && (
-              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-                <p className="text-gray-200 text-lg">{pageData.description}</p>
-              </div>
-            )}
-            
-            {photoPreviews.length > 0 && (
-              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-                <h4 className="text-white font-bold mb-4">Gallery ({photoPreviews.length} photos)</h4>
-                <div className="grid grid-cols-3 gap-3">
-                  {photoPreviews.slice(0, 6).map((photo, index) => (
-                    <img key={index} src={photo} alt={`Preview ${index + 1}`} className="w-full aspect-video object-cover rounded" />
-                  ))}
-                </div>
-                {photoPreviews.length > 6 && (
-                  <p className="text-gray-400 text-sm mt-2">+ {photoPreviews.length - 6} more photos</p>
-                )}
-              </div>
-            )}
-            
-            {pageData.videoURL && (
-              <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
-                <h4 className="text-white font-bold mb-4">Featured Video</h4>
-                <div className="aspect-video bg-black rounded">
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <Play className="w-16 h-16" />
+          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 rounded-xl overflow-hidden space-y-0">
+            {bannerPreview && (
+              <div className="relative h-64 bg-slate-900">
+                <img src={bannerPreview} alt="Banner" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+                <div className="absolute inset-0 flex items-center px-8">
+                  <div>
+                    <h2 className="text-4xl font-black text-white mb-2">Wall of Fame</h2>
+                    <div className="h-1 w-24 bg-yellow-400"></div>
                   </div>
                 </div>
               </div>
             )}
+            
+            <div className="p-8 space-y-8">
+              {pageData.description && (
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+                  <p className="text-gray-200 text-lg">{pageData.description}</p>
+                </div>
+              )}
+              
+              {photoPreviews.length > 0 && (
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+                  <h4 className="text-white font-bold mb-4">Gallery ({photoPreviews.length} photos)</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    {photoPreviews.slice(0, 4).map((photo, index) => (
+                      <img key={index} src={photo} alt={`Preview ${index + 1}`} className="w-full aspect-video object-cover rounded" />
+                    ))}
+                  </div>
+                  {photoPreviews.length > 4 && (
+                    <p className="text-gray-400 text-sm mt-2">+ {photoPreviews.length - 4} more photos</p>
+                  )}
+                </div>
+              )}
+              
+              {pageData.videoURL && (
+                <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6">
+                  <h4 className="text-white font-bold mb-4">Featured Video</h4>
+                  <div className="aspect-video bg-black rounded">
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <Play className="w-16 h-16" />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
