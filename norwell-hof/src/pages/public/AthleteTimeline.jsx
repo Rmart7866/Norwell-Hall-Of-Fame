@@ -524,7 +524,7 @@ const AthleteTimeline = () => {
           ) : (
             <>
               <p className="text-gray-400 text-center mb-8">
-                Displaying **{filteredAndSortedAthletes.length}** athlete(s)
+                
                 {selectedYear !== 'All' && ` from the ${selectedYear} HOF class`}
                 {filterSport !== 'All' && ` filtered by ${filterSport}`}
               </p>
