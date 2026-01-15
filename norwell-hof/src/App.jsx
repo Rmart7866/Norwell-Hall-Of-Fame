@@ -1,11 +1,9 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-
 // Layout Components
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
-
 // Public Pages
 import Home from './pages/public/Home';
 import Championships from './pages/public/Championships';
@@ -17,7 +15,7 @@ import InducteeProfile from './pages/public/InducteeProfile';
 import AthleteTimeline from './pages/public/AthleteTimeline';
 import Galleries from './pages/public/Galleries';
 import Videos from './pages/public/Videos';
-
+import WallOfFame from './pages/public/WallOfFame';
 // Admin Pages
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -41,6 +39,7 @@ function App() {
               <Route path="/athletes" element={<AthleteTimeline />} />
               <Route path="/galleries" element={<Galleries />} />
               <Route path="/videos" element={<Videos />} />
+              <Route path="/wall-of-fame" element={<WallOfFame />} />
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<Login />} />
