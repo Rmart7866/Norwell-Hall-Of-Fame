@@ -61,45 +61,38 @@ const WallOfFame = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 pt-32">
-      {/* Header Section with Banner Image */}
-      <section className="relative overflow-hidden">
-        {pageData?.bannerImage ? (
+      {/* Header Section */}
+      <section className="py-12 relative border-b-4 border-yellow-400">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-400 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-yellow-400 rounded-full blur-3xl animate-pulse delay-700"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center">
+            <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
+              Wall of Fame
+            </h1>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Celebrating excellence in Norwell athletics
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Banner Image Section */}
+      {pageData?.bannerImage && (
+        <section className="relative overflow-hidden">
           <div className="relative h-[300px]">
             <img
               src={pageData.bannerImage}
               alt="Wall of Fame Banner"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
-            <div className="absolute inset-0 flex items-center">
-              <div className="container mx-auto px-4">
-                <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
-                  Wall of Fame
-                </h1>
-                <div className="h-2 w-32 bg-gradient-to-r from-yellow-400 to-transparent"></div>
-              </div>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
           </div>
-        ) : (
-          <div className="py-12 relative border-b-4 border-yellow-400">
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-400 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute bottom-10 right-10 w-80 h-80 bg-yellow-400 rounded-full blur-3xl animate-pulse delay-700"></div>
-            </div>
-            
-            <div className="container mx-auto px-4 relative z-10">
-              <div className="text-center">
-                <h1 className="text-6xl md:text-7xl font-black text-white mb-4 tracking-tight">
-                  Wall of Fame
-                </h1>
-                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                  Celebrating excellence in Norwell athletics
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* Main Content Section */}
       <section className="py-16 pb-24">
