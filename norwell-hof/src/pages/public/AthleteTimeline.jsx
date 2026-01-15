@@ -279,8 +279,8 @@ const AthleteTimeline = () => {
           hasCoach = true;
         }
         
-        // Split and add individual sports (excluding coach variants)
-        athlete.sport.split(/[,&]/).forEach(sport => {
+        // Split by multiple delimiters: comma, ampersand, AND dash with spaces
+        athlete.sport.split(/[,&]|(?:\s+-\s+)/).forEach(sport => {
           const trimmedSport = sport.trim();
           if (trimmedSport && !trimmedSport.toLowerCase().includes('coach')) {
             sports.add(trimmedSport);
@@ -335,7 +335,8 @@ const AthleteTimeline = () => {
         }
         
         // Check if the selected sport appears in the athlete's sport list
-        return athlete.sport.split(/[,&]/).some(s => s.trim() === filterSport);
+        // Split by comma, ampersand, AND dash with spaces
+        return athlete.sport.split(/[,&]|(?:\s+-\s+)/).some(s => s.trim() === filterSport);
       });
     }
 
