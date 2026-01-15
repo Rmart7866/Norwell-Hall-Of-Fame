@@ -13,6 +13,7 @@ import ManageVideos from '../../components/admin/ManageVideos';
 import ManageAboutPage from '../../components/admin/ManageAboutPage';
 import ManageHomeBanner from '../../components/admin/ManageHomeBanner';
 import ManageWallOfFame from '../../components/admin/ManageWallOfFame';
+import ManageClassImages from '../../components/admin/ManageClassImages';
 import DataSeeder from '../../components/admin/DataSeeder';
 
 const Dashboard = () => {
@@ -32,6 +33,7 @@ const Dashboard = () => {
     { id: 'championships', label: 'Championships', icon: Trophy },
     { id: 'championship-photos', label: 'Championship Photos', icon: Image },
     { id: 'classes', label: 'Manage Classes', icon: Calendar },
+    { id: 'class-images', label: 'Class Images', icon: Image },
     { id: 'inductees', label: 'Manage Inductees', icon: Users },
     { id: 'photos', label: 'Manage Photos', icon: Image },
     { id: 'videos', label: 'Manage Videos', icon: Video },
@@ -79,6 +81,7 @@ const Dashboard = () => {
           {activeTab === 'championships' && <ManageChampionships />}
           {activeTab === 'championship-photos' && <ManageChampionshipPhotos />}
           {activeTab === 'classes' && <ManageClasses />}
+          {activeTab === 'class-images' && <ManageClassImages />}
           {activeTab === 'inductees' && <ManageInductees />}
           {activeTab === 'photos' && <ManagePhotos />}
           {activeTab === 'videos' && <ManageVideos />}
@@ -133,6 +136,7 @@ const OverviewTab = () => {
           <ol className="list-decimal list-inside space-y-2 text-gray-700">
             <li>Use the Data Seeder above for quick testing</li>
             <li>Or manually add classes in "Manage Classes"</li>
+            <li>Add class images in "Class Images" tab</li>
             <li>Add inductees to classes in "Manage Inductees"</li>
             <li>Add championships in "Championships" tab</li>
             <li>Upload photos and videos as needed</li>
@@ -149,6 +153,7 @@ const OverviewTab = () => {
             <li>✅ Delete test data anytime from manage tabs</li>
             <li>✅ Check the timeline at /inductees after upload</li>
             <li>✅ Use Championship Photos tab to add gallery images</li>
+            <li>✅ Class Images appear on the inductees timeline</li>
             <li>✅ About Page editor has live preview mode</li>
             <li>✅ Home Banner can be enabled/disabled anytime</li>
           </ul>
