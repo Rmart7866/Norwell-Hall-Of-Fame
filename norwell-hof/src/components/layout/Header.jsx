@@ -18,10 +18,10 @@ const Header = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Inductees', path: '/inductees' },
-    { name: 'Athletes', path: '/athletes' },
+    { name: 'Inductee Classes', path: '/inductees' },
+    { name: 'Inductees', path: '/athletes' },
     { name: 'Championships', path: '/championships' },
-    { name: 'Galleries', path: '/galleries' },
+    { name: 'Wall Of Fame', path: '/wall-of-fame' },
     { name: 'Videos', path: '/videos' },
   ];
 
