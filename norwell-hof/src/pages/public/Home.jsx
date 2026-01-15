@@ -31,24 +31,38 @@ const NominationsSection = () => {
 
   if (loading || !contentData) return null;
 
+  // Check if the link is external
+  const isExternalLink = contentData.buttonLink?.startsWith('http://') || contentData.buttonLink?.startsWith('https://');
+
   return (
-    <section className="py-20 bg-gradient-to-br from-yellow-400 to-amber-500">
+    <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 border-t-4 border-b-4 border-yellow-400">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-yellow-400">
           {contentData.title}
         </h2>
-        <p className="text-2xl text-slate-800 mb-4 max-w-3xl mx-auto">
+        <p className="text-2xl text-yellow-300 mb-4 max-w-3xl mx-auto">
           {contentData.subtitle}
         </p>
-        <p className="text-xl text-slate-800 mb-10 max-w-3xl mx-auto">
+        <p className="text-xl text-gray-200 mb-10 max-w-3xl mx-auto">
           {contentData.description}
         </p>
-        <Link
-          to={contentData.buttonLink}
-          className="inline-block bg-slate-900 text-yellow-400 px-10 py-4 rounded-lg font-bold text-lg hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 shadow-xl"
-        >
-          {contentData.buttonText}
-        </Link>
+        {isExternalLink ? (
+          <a
+            href={contentData.buttonLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-yellow-400 text-slate-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-xl"
+          >
+            {contentData.buttonText}
+          </a>
+        ) : (
+          <Link
+            to={contentData.buttonLink}
+            className="inline-block bg-yellow-400 text-slate-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-xl"
+          >
+            {contentData.buttonText}
+          </Link>
+        )}
       </div>
     </section>
   );
