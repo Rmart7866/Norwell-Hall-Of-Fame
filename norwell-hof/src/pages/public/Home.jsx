@@ -456,18 +456,7 @@ const Home = () => {
                 Nominations for the Hall of Fame are accepted annually. Help us honor those who made a lasting impact on Norwell athletics.
               </p>
             </div>
-            <div className="bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl p-10 shadow-2xl relative mb-12">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent"></div>
-              <h3 className="text-2xl font-bold text-white mb-6 text-center">Nomination Forms</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {nominationForms.map((form, index) => (
-                  <a key={index} href={form.file} download className="flex items-center justify-between bg-slate-900/50 border border-slate-600 hover:border-yellow-400 rounded-lg p-4 transition-all duration-300 hover:bg-slate-900 group">
-                    <span className="text-gray-300 font-semibold group-hover:text-white">{form.name}</span>
-                    <Download className="w-5 h-5 text-yellow-400 group-hover:scale-110 transition-transform" />
-                  </a>
-                ))}
-              </div>
-            </div>
+            
             <div className="text-center">
               <Link to="/about" className="inline-block bg-yellow-400 text-slate-900 px-10 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-xl">
                 Learn More About Nominations
