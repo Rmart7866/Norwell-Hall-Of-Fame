@@ -131,7 +131,8 @@ const AthleteCard = ({ athlete }) => {
                   <div className="bg-yellow-400/10 border-2 border-yellow-400/30 rounded-md p-3 flex-1 flex flex-col justify-center">
                     {sport && (
                       <div className="text-center mb-2">
-                        <div className="mb-1">
+                        <div className="flex items-center justify-center gap-2 mb-1">
+                          <Award className="w-4 h-4 text-yellow-400" />
                           <span className="text-gray-400 text-xs font-bold uppercase" style={{ fontFamily: 'Georgia, serif' }}>
                             Sport{(sport.includes(',') || sport.includes('&') || sport.includes('-')) ? 's' : ''}
                           </span>
@@ -570,4 +571,38 @@ const AthleteTimeline = () => {
                 {filterSport !== 'All' && ` filtered by ${filterSport}`}
               </p>
 
-              <div className="
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {filteredAndSortedAthletes.map((athlete) => (
+                  <AthleteCard key={athlete.id} athlete={athlete} />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* Styles for Card Flip and Scrollbar Hide */}
+      <style jsx global>{`
+        /* Card Flip Styles */
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .backface-hidden {
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+
+        /* Hide scrollbar for the horizontal timeline */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default AthleteTimeline;
