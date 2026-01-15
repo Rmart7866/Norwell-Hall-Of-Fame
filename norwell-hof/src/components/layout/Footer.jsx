@@ -56,13 +56,13 @@ const Footer = () => {
               Contact
             </h3>
             <p className="text-gray-300 text-sm">
-              Norwell High School
+              Chris Glynn
             </p>
             <p className="text-gray-300 text-sm">
-              18 South Street
+              cktglynn@aol.com
             </p>
             <p className="text-gray-300 text-sm">
-              Norwell, MA 02061
+              781-223-3383
             </p>
           </div>
         </div>
