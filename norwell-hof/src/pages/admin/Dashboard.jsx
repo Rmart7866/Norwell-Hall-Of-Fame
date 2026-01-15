@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { Trophy, Users, Image, Video, Calendar, FileText, Home } from 'lucide-react';
 import ManageClasses from '../../components/admin/ManageClasses';
+import ManageHomeContent from '../../components/admin/ManageHomeContent';
 import ManageChampionships from '../../components/admin/ManageChampionships';
 import ManageChampionshipPhotos from '../../components/admin/ManageChampionshipPhotos';
 import ManageInductees from '../../components/admin/ManageInductees';
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Trophy },
     { id: 'home-banner', label: 'Home Banner', icon: Home },
+    { id: 'home-content', label: 'Home Content', icon: FileText },
     { id: 'wall-of-fame', label: 'Wall of Fame', icon: Trophy },
     { id: 'about-page', label: 'About Page', icon: FileText },
     { id: 'championships', label: 'Championships', icon: Trophy },
