@@ -5,8 +5,8 @@ import { collection, query, where, getDocs, orderBy, limit, doc, getDoc } from '
 import { db } from '../../firebase/config';
 import { Award, User, Download, GraduationCap, MousePointerClick, Trophy, ChevronRight } from 'lucide-react';
 
-// Bottom Content Sections Component
-const BottomContentSections = () => {
+// Nominations Section Component (appears at bottom of page)
+const NominationsSection = () => {
   const [contentData, setContentData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,75 +32,25 @@ const BottomContentSections = () => {
   if (loading || !contentData) return null;
 
   return (
-    <>
-      {/* Nominations Section */}
-      <section className="py-20 bg-gradient-to-br from-yellow-600 to-yellow-700">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
-            {contentData.nominationsSection.title}
-          </h2>
-          <p className="text-2xl text-slate-800 mb-4 max-w-3xl mx-auto">
-            {contentData.nominationsSection.subtitle}
-          </p>
-          <p className="text-xl text-slate-800 mb-10 max-w-3xl mx-auto">
-            {contentData.nominationsSection.description}
-          </p>
-          <Link
-            to={contentData.nominationsSection.buttonLink}
-            className="inline-block bg-slate-900 text-yellow-400 px-10 py-4 rounded-lg font-bold text-lg hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 shadow-xl"
-          >
-            {contentData.nominationsSection.buttonText}
-          </Link>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      {contentData.statsSection.enabled && contentData.statsSection.stats.length > 0 && (
-        <section className="py-20 bg-slate-900">
-          <div className="container mx-auto px-4">
-            <div className={`grid grid-cols-1 md:grid-cols-${Math.min(contentData.statsSection.stats.length, 4)} gap-12 max-w-6xl mx-auto`}>
-              {contentData.statsSection.stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-5xl md:text-6xl font-black text-yellow-400 mb-3">
-                    {stat.value}
-                  </div>
-                  <div className="text-xl text-gray-300 font-semibold">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Call to Action Section */}
-      <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            {contentData.ctaSection.title}
-          </h2>
-          <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
-            {contentData.ctaSection.description}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            {contentData.ctaSection.buttons.map((button, index) => (
-              <Link
-                key={index}
-                to={button.link}
-                className={`inline-block px-10 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl ${
-                  button.style === 'primary'
-                    ? 'bg-yellow-400 text-slate-900 hover:bg-yellow-300'
-                    : 'bg-white text-slate-900 hover:bg-gray-100'
-                }`}
-              >
-                {button.text}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-    </>
+    <section className="py-20 bg-gradient-to-br from-yellow-600 to-yellow-700">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
+          {contentData.title}
+        </h2>
+        <p className="text-2xl text-slate-800 mb-4 max-w-3xl mx-auto">
+          {contentData.subtitle}
+        </p>
+        <p className="text-xl text-slate-800 mb-10 max-w-3xl mx-auto">
+          {contentData.description}
+        </p>
+        <Link
+          to={contentData.buttonLink}
+          className="inline-block bg-slate-900 text-yellow-400 px-10 py-4 rounded-lg font-bold text-lg hover:bg-slate-800 transition-all duration-300 transform hover:scale-105 shadow-xl"
+        >
+          {contentData.buttonText}
+        </Link>
+      </div>
+    </section>
   );
 };
 
@@ -544,8 +494,8 @@ const Home = () => {
         </section>
       )}
 
-      {/* Editable Bottom Content Sections */}
-      <BottomContentSections />
+      {/* Nominations Section (at bottom of page) */}
+      <NominationsSection />
 
       <style>{`
         @keyframes cardDrop {
