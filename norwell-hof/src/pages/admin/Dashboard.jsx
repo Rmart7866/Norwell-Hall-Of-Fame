@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate } from 'react-router-dom';
-import { Trophy, Users, Image, Video, Calendar, FileText } from 'lucide-react';
+import { Trophy, Users, Image, Video, Calendar, FileText, Home } from 'lucide-react';
 import ManageClasses from '../../components/admin/ManageClasses';
 import ManageChampionships from '../../components/admin/ManageChampionships';
 import ManageChampionshipPhotos from '../../components/admin/ManageChampionshipPhotos';
@@ -10,6 +10,7 @@ import ManageInductees from '../../components/admin/ManageInductees';
 import ManagePhotos from '../../components/admin/ManagePhotos';
 import ManageVideos from '../../components/admin/ManageVideos';
 import ManageAboutPage from '../../components/admin/ManageAboutPage';
+import ManageHomeBanner from '../../components/admin/ManageHomeBanner';
 import DataSeeder from '../../components/admin/DataSeeder';
 
 const Dashboard = () => {
@@ -22,6 +23,7 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Trophy },
+    { id: 'home-banner', label: 'Home Banner', icon: Home },
     { id: 'about-page', label: 'About Page', icon: FileText },
     { id: 'championships', label: 'Championships', icon: Trophy },
     { id: 'championship-photos', label: 'Championship Photos', icon: Image },
@@ -66,6 +68,7 @@ const Dashboard = () => {
         {/* Tab Content */}
         <div className="bg-white rounded-lg shadow-lg p-8">
           {activeTab === 'overview' && <OverviewTab />}
+          {activeTab === 'home-banner' && <ManageHomeBanner />}
           {activeTab === 'about-page' && <ManageAboutPage />}
           {activeTab === 'championships' && <ManageChampionships />}
           {activeTab === 'championship-photos' && <ManageChampionshipPhotos />}
@@ -128,6 +131,7 @@ const OverviewTab = () => {
             <li>Add championships in "Championships" tab</li>
             <li>Upload photos and videos as needed</li>
             <li>Edit the About page content in "About Page" tab</li>
+            <li>Configure the home page banner in "Home Banner" tab</li>
           </ol>
         </div>
 
@@ -140,6 +144,7 @@ const OverviewTab = () => {
             <li>✅ Check the timeline at /inductees after upload</li>
             <li>✅ Use Championship Photos tab to add gallery images</li>
             <li>✅ About Page editor has live preview mode</li>
+            <li>✅ Home Banner can be enabled/disabled anytime</li>
           </ul>
         </div>
       </div>
