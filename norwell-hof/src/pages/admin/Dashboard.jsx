@@ -73,6 +73,7 @@ const Dashboard = () => {
         <div className="bg-white rounded-lg shadow-lg p-8">
           {activeTab === 'overview' && <OverviewTab />}
           {activeTab === 'home-banner' && <ManageHomeBanner />}
+          {activeTab === 'home-content' && <ManageHomeContent />}
           {activeTab === 'wall-of-fame' && <ManageWallOfFame />}
           {activeTab === 'about-page' && <ManageAboutPage />}
           {activeTab === 'championships' && <ManageChampionships />}
