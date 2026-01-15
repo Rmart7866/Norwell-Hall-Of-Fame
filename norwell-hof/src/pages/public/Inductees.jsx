@@ -134,17 +134,18 @@ const Inductees = () => {
                   {classes.map((classItem, index) => {
                     const isEven = index % 2 === 0;
                     const isVisible = visibleItems.has(index.toString());
+                    const hasImage = !!classItem.imageURL;
                     
                     return (
                       <div key={classItem.id} className="relative" data-index={index}>
-                        {/* Faded year background - positioned to not be covered by cards */}
+                        {/* Faded year background - BRIGHTENED */}
                         <div 
                           className="absolute pointer-events-none select-none hidden md:block"
                           style={{ 
                             fontSize: '14rem',
                             lineHeight: '1',
                             fontWeight: '900',
-                            color: 'rgba(100, 116, 139, 0.04)',
+                            color: 'rgba(100, 116, 139, 0.08)', // Increased from 0.04 to 0.08
                             top: '50%',
                             left: isEven ? '65%' : '35%',
                             transform: `translate(-50%, -50%)`,
@@ -170,19 +171,44 @@ const Inductees = () => {
                               {/* Card Container */}
                               <div className="w-5/12 relative" style={{ zIndex: 10 }}>
                                 
-                                <div className="bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl p-8 shadow-2xl transform transition-all duration-500 hover:scale-[1.02] hover:border-yellow-500/40 hover:shadow-yellow-500/10 relative overflow-hidden">
+                                <div className="bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-[1.02] hover:border-yellow-500/40 hover:shadow-yellow-500/10 relative">
                                   {/* Connecting line to timeline - INSIDE the card container */}
                                   <div className={`absolute top-1/2 ${isEven ? '-right-16' : '-left-16'} w-16 h-px bg-gradient-to-${isEven ? 'l' : 'r'} ${isEven ? 'from-yellow-500/40' : 'from-yellow-500/40'} to-transparent`}></div>
                                   
                                   {/* Subtle top accent */}
                                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"></div>
 
-                                  <div className="relative z-10">
-                                    {/* Year - Clean and prominent */}
+                                  {/* Image Section (if exists) */}
+                                  {hasImage && (
+                                    <div className="relative h-48 overflow-hidden">
+                                      <img 
+                                        src={classItem.imageURL} 
+                                        alt={`${classItem.year} Induction Class`}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                      />
+                                      {/* Gradient overlay on image */}
+                                      <div className="absolute inset-0 bg-gradient-to-t from-slate-800/95 to-transparent"></div>
+                                      {/* Year badge on image */}
+                                      <div className="absolute top-4 right-4 bg-yellow-500 text-slate-900 px-4 py-2 rounded-full font-black text-xl shadow-lg">
+                                        '{classItem.year.toString().slice(-2)}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Content Section */}
+                                  <div className="p-8 relative z-10">
+                                    {/* Year - Only show large if no image */}
                                     <div className="mb-6">
-                                      <h3 className="text-5xl font-black text-white tracking-tight mb-2">
-                                        {classItem.year}
-                                      </h3>
+                                      {!hasImage && (
+                                        <h3 className="text-5xl font-black text-white tracking-tight mb-2">
+                                          {classItem.year}
+                                        </h3>
+                                      )}
+                                      {hasImage && (
+                                        <h3 className="text-3xl font-black text-white tracking-tight mb-2">
+                                          {classItem.year}
+                                        </h3>
+                                      )}
                                       <div className="text-sm text-gray-400 uppercase tracking-wider font-medium">
                                         Induction Class
                                       </div>
@@ -247,7 +273,7 @@ const Inductees = () => {
                             className="block group"
                           >
                             <div 
-                              className={`bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-2xl hover:border-yellow-500/40 hover:shadow-yellow-500/10 transition-all relative overflow-hidden ${
+                              className={`bg-slate-800/95 backdrop-blur-sm border border-slate-700 rounded-xl overflow-hidden shadow-2xl hover:border-yellow-500/40 hover:shadow-yellow-500/10 transition-all relative ${
                                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                               }`}
                               style={{ transitionDuration: '700ms' }}
@@ -255,10 +281,33 @@ const Inductees = () => {
                               {/* Subtle top accent */}
                               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-500/30 to-transparent"></div>
 
-                              <div className="relative z-10">
+                              {/* Image Section (if exists) */}
+                              {hasImage && (
+                                <div className="relative h-40 overflow-hidden">
+                                  <img 
+                                    src={classItem.imageURL} 
+                                    alt={`${classItem.year} Induction Class`}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                  />
+                                  {/* Gradient overlay */}
+                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-800/95 to-transparent"></div>
+                                  {/* Year badge on image */}
+                                  <div className="absolute top-3 right-3 bg-yellow-500 text-slate-900 px-3 py-1 rounded-full font-black text-lg shadow-lg">
+                                    '{classItem.year.toString().slice(-2)}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Content Section */}
+                              <div className="p-6 relative z-10">
                                 {/* Year */}
                                 <div className="mb-4">
-                                  <h3 className="text-4xl font-black text-white mb-1">{classItem.year}</h3>
+                                  {!hasImage && (
+                                    <h3 className="text-4xl font-black text-white mb-1">{classItem.year}</h3>
+                                  )}
+                                  {hasImage && (
+                                    <h3 className="text-2xl font-black text-white mb-1">{classItem.year}</h3>
+                                  )}
                                   <div className="text-xs text-gray-400 uppercase tracking-wider">
                                     Induction Class
                                   </div>
