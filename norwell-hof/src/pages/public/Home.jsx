@@ -445,26 +445,7 @@ const Home = () => {
         </section>
       )}
 
-      {/* Nomination Forms Section */}
-      <section className="relative py-20 bg-slate-900 border-t-2 border-yellow-400">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-5xl md:text-6xl font-black text-white mb-6">Nominate Today</h2>
-              <div className="h-2 w-48 bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto mb-6"></div>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                Nominations for the Hall of Fame are accepted annually. Help us honor those who made a lasting impact on Norwell athletics.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <Link to="/about" className="inline-block bg-yellow-400 text-slate-900 px-10 py-4 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-xl">
-                Learn More About Nominations
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+   
 
       <style>{`
         @keyframes cardDrop {
