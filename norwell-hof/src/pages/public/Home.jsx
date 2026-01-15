@@ -32,7 +32,7 @@ const NominationsSection = () => {
   if (loading || !contentData) return null;
 
   return (
-    <section className="py-20 bg-gradient-to-br from-yellow-600 to-yellow-700">
+    <section className="py-20 bg-gradient-to-br from-yellow-400 to-amber-500">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900">
           {contentData.title}
