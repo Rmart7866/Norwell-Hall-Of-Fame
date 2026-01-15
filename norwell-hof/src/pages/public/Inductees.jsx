@@ -138,7 +138,7 @@ const Inductees = () => {
                     
                     return (
                       <div key={classItem.id} className="relative" data-index={index}>
-                        {/* Faded year background - BRIGHTENED */}
+                        {/* Faded year background - BRIGHTENED - positioned to not be covered by cards */}
                         <div 
                           className="absolute pointer-events-none select-none hidden md:block"
                           style={{ 
