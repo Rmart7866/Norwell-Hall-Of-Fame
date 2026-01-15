@@ -105,18 +105,18 @@ const ManageHomeContent = () => {
 
       {preview ? (
         /* PREVIEW MODE */
-        <div className="bg-gradient-to-br from-yellow-400 to-amber-500 rounded-xl p-12">
+        <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 rounded-xl p-12 border-4 border-yellow-400">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-4 text-slate-900">
+            <h2 className="text-4xl font-bold mb-4 text-yellow-400">
               {pageData.title}
             </h2>
-            <p className="text-2xl text-slate-800 mb-4">
+            <p className="text-2xl text-yellow-300 mb-4">
               {pageData.subtitle}
             </p>
-            <p className="text-xl text-slate-800 mb-8">
+            <p className="text-xl text-gray-200 mb-8">
               {pageData.description}
             </p>
-            <button className="bg-slate-900 text-yellow-400 px-8 py-3 rounded-lg font-bold text-lg">
+            <button className="bg-yellow-400 text-slate-900 px-8 py-3 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all">
               {pageData.buttonText}
             </button>
           </div>
@@ -196,8 +196,9 @@ const ManageHomeContent = () => {
                     value={pageData.buttonLink}
                     onChange={(e) => setPageData({ ...pageData, buttonLink: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-norwell-blue focus:border-transparent"
-                    placeholder="e.g., /about or /nominations"
+                    placeholder="e.g., /about or https://example.com"
                   />
+                  <p className="text-xs text-gray-500 mt-1">Internal link (/about) or external URL (https://...)</p>
                 </div>
               </div>
             </div>
