@@ -295,7 +295,7 @@ const Home = () => {
       </section>
 
       {/* Editable Banner Section */}
-      {bannerData && bannerData.enabled && (bannerData.title || bannerData.description || bannerData.imageURL) && (
+      {bannerData && bannerData.enabled && (bannerData.title || bannerData.imageURL) && (
         <section className="relative py-0 overflow-hidden">
           <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
             {/* Banner Image */}
