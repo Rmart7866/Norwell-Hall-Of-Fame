@@ -264,22 +264,52 @@ const AthleteTimeline = () => {
   const { uniqueSports, uniqueYears } = useMemo(() => {
     const sports = new Set(['All']);
     const years = new Set(['All']);
+    let hasCoach = false;
     
     allAthletes.forEach(athlete => {
       // Use classYear (HOF year) for the timeline filter
       if (athlete.classYear) years.add(athlete.classYear); 
-      if (athlete.sport) sports.add(athlete.sport);
+      
+      // Split multi-sport strings into individual sports
+      if (athlete.sport) {
+        const sportString = athlete.sport.toLowerCase();
+        
+        // Check if this athlete has any coach role
+        if (sportString.includes('coach')) {
+          hasCoach = true;
+        }
+        
+        // Split and add individual sports (excluding coach variants)
+        athlete.sport.split(/[,&]/).forEach(sport => {
+          const trimmedSport = sport.trim();
+          if (trimmedSport && !trimmedSport.toLowerCase().includes('coach')) {
+            sports.add(trimmedSport);
+          }
+        });
+      }
+    });
+    
+    // Add "Coach" as a category if any coaches exist
+    if (hasCoach) {
+      sports.add('Coach');
+    }
+    
+    // Sort sports alphabetically (All will stay first)
+    const sortedSports = Array.from(sports).sort((a, b) => {
+      if (a === 'All') return -1;
+      if (b === 'All') return 1;
+      return a.localeCompare(b);
     });
     
     // Sort years descending (newest first)
     const sortedYears = Array.from(years)
         .filter(y => y !== 'All')
-        .map(String) // Ensure all are strings for comparison
+        .map(String)
         .sort((a, b) => b - a); 
     
     return { 
-        uniqueSports: Array.from(sports).sort(), 
-        uniqueYears: ['All', ...sortedYears] // 'All' first
+        uniqueSports: sortedSports, 
+        uniqueYears: ['All', ...sortedYears]
     };
   }, [allAthletes]);
   
@@ -289,13 +319,24 @@ const AthleteTimeline = () => {
 
     // 1. Filtering by Selected HOF Year (Timeline filter)
     if (selectedYear !== 'All') {
-        // Ensure classYear is treated as a string for comparison
         result = result.filter(athlete => String(athlete.classYear) === selectedYear);
     }
 
     // 2. Filtering by Sport
     if (filterSport !== 'All') {
-      result = result.filter(athlete => athlete.sport === filterSport);
+      result = result.filter(athlete => {
+        if (!athlete.sport) return false;
+        
+        const sportLower = athlete.sport.toLowerCase();
+        
+        // Special handling for Coach filter
+        if (filterSport === 'Coach') {
+          return sportLower.includes('coach');
+        }
+        
+        // Check if the selected sport appears in the athlete's sport list
+        return athlete.sport.split(/[,&]/).some(s => s.trim() === filterSport);
+      });
     }
 
     // 3. Filtering by Search Term
