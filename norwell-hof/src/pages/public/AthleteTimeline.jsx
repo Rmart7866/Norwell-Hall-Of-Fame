@@ -9,9 +9,6 @@ import {
 
 // --- Utility Functions ---
 
-/**
- * Determines the Tailwind CSS object-position class.
- */
 const getObjectPosition = (position) => {
   switch(position) {
     case 'top': return 'object-top';
@@ -21,11 +18,36 @@ const getObjectPosition = (position) => {
 };
 
 /**
- * Normalizes sport display - replaces standalone "Field" with "Track & Field"
+ * Normalizes and cleans sport display
+ * - Replaces standalone "Field" with "Track & Field"
+ * - Consolidates multiple Track/Field variations into one "Track & Field"
  */
 const normalizeSportDisplay = (sport) => {
   if (!sport) return sport;
-  return sport.replace(/\bfield\b/gi, 'Track & Field');
+  
+  // Split into individual sports
+  const sports = sport.split(/[,&]|(?:\s+-\s+)/).map(s => s.trim());
+  
+  // Check if we have any track/field variants
+  const hasTrackOrField = sports.some(s => {
+    const lower = s.toLowerCase();
+    return lower === 'track' || lower === 'field' || s === 'Track & Field';
+  });
+  
+  // Filter out track/field variants and other sports
+  const otherSports = sports.filter(s => {
+    const lower = s.toLowerCase();
+    return lower !== 'track' && lower !== 'field' && s !== 'Track & Field';
+  });
+  
+  // Build final array
+  const finalSports = [];
+  if (hasTrackOrField) {
+    finalSports.push('Track & Field');
+  }
+  finalSports.push(...otherSports);
+  
+  return finalSports.join(' & ');
 };
 
 // --- Sub Component: Plaque Placeholder ---
@@ -136,14 +158,14 @@ const AthleteCard = ({ athlete }) => {
                         <div className="flex items-center justify-center gap-2 mb-1">
                           <Award className="w-4 h-4 text-yellow-400" />
                           <span className="text-gray-400 text-xs font-bold uppercase" style={{ fontFamily: 'Georgia, serif' }}>
-                            Sport{(displaySport.includes(',') || displaySport.includes('&') || displaySport.includes('-')) ? 's' : ''}
+                            Sport{displaySport.includes('&') ? 's' : ''}
                           </span>
                         </div>
                         <div className="text-white font-bold text-xs leading-tight px-2">
-                          {displaySport.split(/[,&]|(?:\s+-\s+)/).map((s, idx, arr) => (
+                          {displaySport.split(' & ').map((s, idx, arr) => (
                             <span key={idx}>
                               {s.trim()}
-                              {idx < arr.length - 1 && <span className="text-yellow-400 mx-0.5">•</span>}
+                              {idx < arr.length - 1 && <span className="text-yellow-400 mx-1">•</span>}
                             </span>
                           ))}
                         </div>
@@ -272,18 +294,15 @@ const AthleteTimeline = () => {
           const trimmedSport = sport.trim();
           const lowerSport = trimmedSport.toLowerCase();
           
-          // Check if this is track or field related
           if (lowerSport === 'track' || lowerSport === 'field' || trimmedSport === 'Track & Field') {
             hasTrackOrField = true;
           } else if (!lowerSport.includes('coach')) {
-            // Add other sports normally
             sports.add(trimmedSport);
           }
         });
       }
     });
     
-    // Add unified Track & Field if any track/field sports exist
     if (hasTrackOrField) {
       sports.add('Track & Field');
     }
@@ -327,7 +346,6 @@ const AthleteTimeline = () => {
         }
         
         if (filterSport === 'Track & Field') {
-          // Match Track, Field, or Track & Field
           return athlete.sport.split(/[,&]|(?:\s+-\s+)/).some(s => {
             const trimmed = s.trim().toLowerCase();
             return trimmed === 'track' || trimmed === 'field' || s.trim() === 'Track & Field';
