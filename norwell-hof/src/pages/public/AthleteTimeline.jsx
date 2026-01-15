@@ -19,35 +19,38 @@ const getObjectPosition = (position) => {
 
 /**
  * Normalizes and cleans sport display
- * - Replaces standalone "Field" with "Track & Field"
- * - Consolidates multiple Track/Field variations into one "Track & Field"
+ * - Consolidates Track/Field/Track & Field into one "Track & Field"
+ * - Keeps all other sports separate
  */
 const normalizeSportDisplay = (sport) => {
   if (!sport) return sport;
   
-  // Split into individual sports
-  const sports = sport.split(/[,&]|(?:\s+-\s+)/).map(s => s.trim());
+  // Split into individual sports and clean them up
+  const sports = sport.split(/[,&]|(?:\s+-\s+)/)
+    .map(s => s.trim())
+    .filter(s => s);
   
   // Check if we have any track/field variants
   const hasTrackOrField = sports.some(s => {
     const lower = s.toLowerCase();
-    return lower === 'track' || lower === 'field' || s === 'Track & Field';
+    return lower === 'track' || lower === 'field' || lower === 'track & field';
   });
   
-  // Filter out track/field variants and other sports
+  // Filter out ALL track/field variants
   const otherSports = sports.filter(s => {
     const lower = s.toLowerCase();
-    return lower !== 'track' && lower !== 'field' && s !== 'Track & Field';
+    return lower !== 'track' && lower !== 'field' && lower !== 'track & field';
   });
   
-  // Build final array
+  // Build final array - Track & Field first if it exists
   const finalSports = [];
   if (hasTrackOrField) {
     finalSports.push('Track & Field');
   }
   finalSports.push(...otherSports);
   
-  return finalSports.join(' & ');
+  // Join with bullet separator
+  return finalSports.join(' • ');
 };
 
 // --- Sub Component: Plaque Placeholder ---
@@ -126,7 +129,7 @@ const AthleteCard = ({ athlete }) => {
               <div className="absolute -top-1 -left-1 w-8 h-8 border-t-2 border-l-2 border-amber-900 rounded-tl"></div>
               <div className="absolute -top-1 -right-1 w-8 h-8 border-t-2 border-r-2 border-amber-900 rounded-tr"></div>
               <div className="absolute -bottom-1 -left-1 w-8 h-8 border-b-2 border-l-2 border-amber-900 rounded-bl"></div>
-              <div className="absolute -bottom-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-amber-900 rounded-br"></div>
+              <div className="absolute -top-1 -right-1 w-8 h-8 border-b-2 border-r-2 border-amber-900 rounded-br"></div>
 
               <div className="bg-white rounded-md overflow-hidden shadow-lg h-full flex flex-col">
                 <div className="relative h-80 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden flex-shrink-0">
@@ -158,16 +161,11 @@ const AthleteCard = ({ athlete }) => {
                         <div className="flex items-center justify-center gap-2 mb-1">
                           <Award className="w-4 h-4 text-yellow-400" />
                           <span className="text-gray-400 text-xs font-bold uppercase" style={{ fontFamily: 'Georgia, serif' }}>
-                            Sport{displaySport.includes('&') ? 's' : ''}
+                            Sport{displaySport.includes('•') ? 's' : ''}
                           </span>
                         </div>
                         <div className="text-white font-bold text-xs leading-tight px-2">
-                          {displaySport.split(' & ').map((s, idx, arr) => (
-                            <span key={idx}>
-                              {s.trim()}
-                              {idx < arr.length - 1 && <span className="text-yellow-400 mx-1">•</span>}
-                            </span>
-                          ))}
+                          {displaySport}
                         </div>
                       </div>
                     )}
