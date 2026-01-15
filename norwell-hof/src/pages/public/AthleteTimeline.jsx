@@ -73,8 +73,8 @@ const AthleteCard = ({ athlete }) => {
   // Check if we need to use the Plaque
   const usePlaque = !photoURL;
   
-  // Normalize sport display: replace "field" with "track"
-  const displaySport = sport ? sport.replace(/\bfield\b/gi, 'track') : sport;
+  // Keep sport as-is for display (Track & Field stays Track & Field)
+  const displaySport = sport;
 
   return (
     <Link 
@@ -283,11 +283,12 @@ const AthleteTimeline = () => {
         }
         
         // Split by multiple delimiters: comma, ampersand, AND dash with spaces
-        // Replace "field" with "track" before processing
-        const normalizedSport = athlete.sport.replace(/\bfield\b/gi, 'track');
-        normalizedSport.split(/[,&]|(?:\s+-\s+)/).forEach(sport => {
+        athlete.sport.split(/[,&]|(?:\s+-\s+)/).forEach(sport => {
           const trimmedSport = sport.trim();
-          if (trimmedSport && !trimmedSport.toLowerCase().includes('coach')) {
+          // Skip coach roles and standalone "Field" entries
+          if (trimmedSport && 
+              !trimmedSport.toLowerCase().includes('coach') && 
+              trimmedSport.toLowerCase() !== 'field') {
             sports.add(trimmedSport);
           }
         });
@@ -327,7 +328,7 @@ const AthleteTimeline = () => {
         result = result.filter(athlete => String(athlete.classYear) === selectedYear);
     }
 
-    // 2. Filtering by Sport (normalize "field" to "track" for comparison)
+    // 2. Filtering by Sport
     if (filterSport !== 'All') {
       result = result.filter(athlete => {
         if (!athlete.sport) return false;
@@ -339,27 +340,21 @@ const AthleteTimeline = () => {
           return sportLower.includes('coach');
         }
         
-        // Normalize sport string by replacing "field" with "track"
-        const normalizedSport = athlete.sport.replace(/\bfield\b/gi, 'track');
-        
         // Check if the selected sport appears in the athlete's sport list
         // Split by comma, ampersand, AND dash with spaces
-        return normalizedSport.split(/[,&]|(?:\s+-\s+)/).some(s => s.trim() === filterSport);
+        return athlete.sport.split(/[,&]|(?:\s+-\s+)/).some(s => s.trim() === filterSport);
       });
     }
 
     // 3. Filtering by Search Term
     if (searchTerm) {
       const lowerCaseSearch = searchTerm.toLowerCase();
-      result = result.filter(athlete => {
-        // Normalize sport for search as well
-        const normalizedSport = athlete.sport ? athlete.sport.replace(/\bfield\b/gi, 'track') : '';
-        
-        return athlete.name?.toLowerCase().includes(lowerCaseSearch) || 
-          normalizedSport.toLowerCase().includes(lowerCaseSearch) ||
-          athlete.classYear?.toString().includes(lowerCaseSearch) ||
-          athlete.graduationYear?.toString().includes(lowerCaseSearch);
-      });
+      result = result.filter(athlete => 
+        athlete.name?.toLowerCase().includes(lowerCaseSearch) || 
+        athlete.sport?.toLowerCase().includes(lowerCaseSearch) ||
+        athlete.classYear?.toString().includes(lowerCaseSearch) ||
+        athlete.graduationYear?.toString().includes(lowerCaseSearch)
+      );
     }
 
     // 4. Sorting
