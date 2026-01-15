@@ -145,7 +145,7 @@ const Inductees = () => {
                             fontSize: '14rem',
                             lineHeight: '1',
                             fontWeight: '900',
-                            color: 'rgba(100, 116, 139, 0.08)', // Increased from 0.04 to 0.08
+                            color: 'rgba(100, 116, 139, 0.08)',
                             top: '50%',
                             left: isEven ? '65%' : '35%',
                             transform: `translate(-50%, -50%)`,
@@ -180,35 +180,25 @@ const Inductees = () => {
 
                                   {/* Image Section (if exists) */}
                                   {hasImage && (
-                                    <div className="relative h-48 overflow-hidden">
+                                    <div className="aspect-video bg-gradient-to-br from-slate-700 to-slate-900 overflow-hidden">
                                       <img 
                                         src={classItem.imageURL} 
                                         alt={`${classItem.year} Induction Class`}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                       />
-                                      {/* Gradient overlay on image */}
-                                      <div className="absolute inset-0 bg-gradient-to-t from-slate-800/95 to-transparent"></div>
-                                      {/* Year badge on image */}
-                                      <div className="absolute top-4 right-4 bg-yellow-500 text-slate-900 px-4 py-2 rounded-full font-black text-xl shadow-lg">
-                                        '{classItem.year.toString().slice(-2)}
-                                      </div>
                                     </div>
                                   )}
 
                                   {/* Content Section */}
                                   <div className="p-8 relative z-10">
-                                    {/* Year - Only show large if no image */}
+                                    {/* Year Badge */}
                                     <div className="mb-6">
-                                      {!hasImage && (
-                                        <h3 className="text-5xl font-black text-white tracking-tight mb-2">
-                                          {classItem.year}
-                                        </h3>
-                                      )}
-                                      {hasImage && (
-                                        <h3 className="text-3xl font-black text-white tracking-tight mb-2">
-                                          {classItem.year}
-                                        </h3>
-                                      )}
+                                      <div className="inline-block bg-yellow-500 text-slate-900 px-4 py-1 rounded-full font-black text-sm mb-3">
+                                        {classItem.year}
+                                      </div>
+                                      <h3 className="text-3xl font-bold text-white tracking-tight mb-2">
+                                        Class of {classItem.year}
+                                      </h3>
                                       <div className="text-sm text-gray-400 uppercase tracking-wider font-medium">
                                         Induction Class
                                       </div>
@@ -232,7 +222,7 @@ const Inductees = () => {
 
                                     {/* Description */}
                                     {classItem.description && (
-                                      <p className="text-gray-400 mb-6 leading-relaxed">
+                                      <p className="text-gray-400 mb-6 leading-relaxed line-clamp-3">
                                         {classItem.description}
                                       </p>
                                     )}
@@ -283,31 +273,23 @@ const Inductees = () => {
 
                               {/* Image Section (if exists) */}
                               {hasImage && (
-                                <div className="relative h-40 overflow-hidden">
+                                <div className="aspect-video bg-gradient-to-br from-slate-700 to-slate-900 overflow-hidden">
                                   <img 
                                     src={classItem.imageURL} 
                                     alt={`${classItem.year} Induction Class`}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                   />
-                                  {/* Gradient overlay */}
-                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-800/95 to-transparent"></div>
-                                  {/* Year badge on image */}
-                                  <div className="absolute top-3 right-3 bg-yellow-500 text-slate-900 px-3 py-1 rounded-full font-black text-lg shadow-lg">
-                                    '{classItem.year.toString().slice(-2)}
-                                  </div>
                                 </div>
                               )}
 
                               {/* Content Section */}
                               <div className="p-6 relative z-10">
-                                {/* Year */}
+                                {/* Year Badge */}
                                 <div className="mb-4">
-                                  {!hasImage && (
-                                    <h3 className="text-4xl font-black text-white mb-1">{classItem.year}</h3>
-                                  )}
-                                  {hasImage && (
-                                    <h3 className="text-2xl font-black text-white mb-1">{classItem.year}</h3>
-                                  )}
+                                  <div className="inline-block bg-yellow-500 text-slate-900 px-4 py-1 rounded-full font-black text-sm mb-3">
+                                    {classItem.year}
+                                  </div>
+                                  <h3 className="text-2xl font-bold text-white mb-1">Class of {classItem.year}</h3>
                                   <div className="text-xs text-gray-400 uppercase tracking-wider">
                                     Induction Class
                                   </div>
@@ -331,7 +313,7 @@ const Inductees = () => {
 
                                 {/* Description */}
                                 {classItem.description && (
-                                  <p className="text-gray-400 mb-4 text-sm leading-relaxed">
+                                  <p className="text-gray-400 mb-4 text-sm leading-relaxed line-clamp-3">
                                     {classItem.description}
                                   </p>
                                 )}
