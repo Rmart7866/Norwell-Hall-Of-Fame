@@ -1,7 +1,7 @@
 // src/components/admin/ManageWallOfFame.jsx
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase/config';
 import { Image, Save, AlertCircle, CheckCircle, X, Play } from 'lucide-react';
 
@@ -44,7 +44,6 @@ const ManageWallOfFame = () => {
   const handlePhotoChange = (e) => {
     const files = Array.from(e.target.files);
     
-    // Validate file types
     const invalidFiles = files.filter(file => {
       const fileName = file.name.toLowerCase();
       return fileName.endsWith('.heic') || fileName.endsWith('.heif');
@@ -58,7 +57,6 @@ const ManageWallOfFame = () => {
 
     setPhotoFiles(files);
     
-    // Generate previews
     const previews = [];
     files.forEach(file => {
       const reader = new FileReader();
@@ -76,18 +74,15 @@ const ManageWallOfFame = () => {
     const existingPhotoCount = pageData.photos.length;
     
     if (index < existingPhotoCount) {
-      // Remove from existing photos
       const newPhotos = [...pageData.photos];
       newPhotos.splice(index, 1);
       setPageData({ ...pageData, photos: newPhotos });
     }
     
-    // Update previews
     const newPreviews = [...photoPreviews];
     newPreviews.splice(index, 1);
     setPhotoPreviews(newPreviews);
     
-    // Update file list if needed
     if (index >= existingPhotoCount && photoFiles.length > 0) {
       const fileIndex = index - existingPhotoCount;
       const newFiles = [...photoFiles];
@@ -172,7 +167,6 @@ const ManageWallOfFame = () => {
         <p className="text-gray-600">Edit the Wall of Fame page content</p>
       </div>
 
-      {/* Message Display */}
       {message.text && (
         <div className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
           message.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
@@ -183,7 +177,6 @@ const ManageWallOfFame = () => {
       )}
 
       <div className="space-y-6">
-        {/* Description */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             Description
@@ -197,7 +190,6 @@ const ManageWallOfFame = () => {
           />
         </div>
 
-        {/* Photos */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             Photos
@@ -213,7 +205,6 @@ const ManageWallOfFame = () => {
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-norwell-blue file:text-white hover:file:bg-blue-700 mb-4"
           />
           
-          {/* Photo Grid */}
           {photoPreviews.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
               {photoPreviews.map((photo, index) => (
@@ -235,7 +226,6 @@ const ManageWallOfFame = () => {
           )}
         </div>
 
-        {/* Video URL */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             YouTube Video URL
@@ -251,11 +241,10 @@ const ManageWallOfFame = () => {
             />
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            Paste the full YouTube URL (e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+            Paste the full YouTube URL
           </p>
         </div>
 
-        {/* Preview Section */}
         <div className="border-t-2 border-gray-200 pt-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Preview</h3>
           <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 rounded-xl p-8 space-y-8">
@@ -292,7 +281,6 @@ const ManageWallOfFame = () => {
           </div>
         </div>
 
-        {/* Save Button */}
         <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
           <button
             onClick={handleSave}
