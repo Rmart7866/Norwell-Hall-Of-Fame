@@ -1,7 +1,7 @@
 // src/pages/public/Home.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Award, User, Download, GraduationCap, MousePointerClick, Trophy, ChevronRight } from 'lucide-react';
 
@@ -9,6 +9,7 @@ const Home = () => {
   const [latestClass, setLatestClass] = useState(null);
   const [latestInductees, setLatestInductees] = useState([]);
   const [latestChampionship, setLatestChampionship] = useState(null);
+  const [bannerData, setBannerData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [maxCardHeight, setMaxCardHeight] = useState(0);
@@ -17,6 +18,13 @@ const Home = () => {
   useEffect(() => {
     const fetchLatestData = async () => {
       try {
+        // Fetch banner data
+        const bannerRef = doc(db, 'pages', 'home-banner');
+        const bannerSnap = await getDoc(bannerRef);
+        if (bannerSnap.exists() && bannerSnap.data().enabled) {
+          setBannerData(bannerSnap.data());
+        }
+
         // Fetch latest class
         const classesRef = collection(db, 'classes');
         const classQuery = query(classesRef, orderBy('year', 'desc'), limit(1));
@@ -115,6 +123,59 @@ const Home = () => {
           </p>
         </div>
       </div>
+
+      {/* Editable Banner Section */}
+      {bannerData && bannerData.enabled && (bannerData.title || bannerData.description || bannerData.imageURL) && (
+        <section className="relative py-0 overflow-hidden">
+          <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+            {/* Banner Image */}
+            {bannerData.imageURL && (
+              <div className="relative h-[500px] overflow-hidden">
+                <img
+                  src={bannerData.imageURL}
+                  alt="Banner"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+              </div>
+            )}
+            
+            {/* Content Overlay */}
+            {(bannerData.title || bannerData.description) && (
+              <div className={`${bannerData.imageURL ? 'absolute inset-0' : 'relative py-24'} flex items-center`}>
+                <div className="container mx-auto px-4 relative z-10">
+                  <div className="max-w-4xl">
+                    {/* Animated accent line */}
+                    <div className="h-2 w-32 bg-gradient-to-r from-yellow-400 to-yellow-600 mb-8 animate-pulse"></div>
+                    
+                    {bannerData.title && (
+                      <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-8 leading-tight tracking-tight drop-shadow-2xl">
+                        {bannerData.title}
+                      </h2>
+                    )}
+                    
+                    {bannerData.description && (
+                      <p className="text-xl md:text-2xl lg:text-3xl text-gray-100 leading-relaxed drop-shadow-lg mb-8 max-w-3xl">
+                        {bannerData.description}
+                      </p>
+                    )}
+                    
+                    {/* Optional decorative element */}
+                    <div className="flex gap-3 mt-10">
+                      <div className="h-1 w-20 bg-yellow-400"></div>
+                      <div className="h-1 w-14 bg-yellow-400/70"></div>
+                      <div className="h-1 w-8 bg-yellow-400/40"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Bottom fade effect */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent"></div>
+          </div>
+        </section>
+      )}
 
       {/* Latest Inductees Section */}
       <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
