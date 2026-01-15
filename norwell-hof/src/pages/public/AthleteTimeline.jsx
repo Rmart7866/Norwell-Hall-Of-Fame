@@ -72,6 +72,9 @@ const AthleteCard = ({ athlete }) => {
 
   // Check if we need to use the Plaque
   const usePlaque = !photoURL;
+  
+  // Normalize sport display: replace "field" with "track"
+  const displaySport = sport ? sport.replace(/\bfield\b/gi, 'track') : sport;
 
   return (
     <Link 
@@ -105,7 +108,7 @@ const AthleteCard = ({ athlete }) => {
                 {/* Photo Area / Plaque */}
                 <div className="relative h-80 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden flex-shrink-0">
                   {usePlaque ? (
-                    <PlaquePlaceholder name={name} sport={sport} classYear={classYear} />
+                    <PlaquePlaceholder name={name} sport={displaySport} classYear={classYear} />
                   ) : (
                     <img 
                       src={photoURL} 
@@ -129,16 +132,16 @@ const AthleteCard = ({ athlete }) => {
                     {name}
                   </h3>
                   <div className="bg-yellow-400/10 border-2 border-yellow-400/30 rounded-md p-3 flex-1 flex flex-col justify-center">
-                    {sport && (
+                    {displaySport && (
                       <div className="text-center mb-2">
                         <div className="flex items-center justify-center gap-2 mb-1">
                           <Award className="w-4 h-4 text-yellow-400" />
                           <span className="text-gray-400 text-xs font-bold uppercase" style={{ fontFamily: 'Georgia, serif' }}>
-                            Sport{(sport.includes(',') || sport.includes('&') || sport.includes('-')) ? 's' : ''}
+                            Sport{(displaySport.includes(',') || displaySport.includes('&') || displaySport.includes('-')) ? 's' : ''}
                           </span>
                         </div>
                         <div className="text-white font-bold text-xs leading-tight px-2">
-                          {sport.split(/[,&]|(?:\s+-\s+)/).map((s, idx, arr) => (
+                          {displaySport.split(/[,&]|(?:\s+-\s+)/).map((s, idx, arr) => (
                             <span key={idx}>
                               {s.trim()}
                               {idx < arr.length - 1 && <span className="text-yellow-400 mx-0.5">•</span>}
@@ -148,7 +151,7 @@ const AthleteCard = ({ athlete }) => {
                       </div>
                     )}
                     {graduationYear && (
-                      <div className={`flex items-center justify-between ${sport ? 'pt-2 border-t border-yellow-400/30' : ''}`}>
+                      <div className={`flex items-center justify-between ${displaySport ? 'pt-2 border-t border-yellow-400/30' : ''}`}>
                         <div className="flex items-center gap-2">
                           <GraduationCap className="w-4 h-4 text-yellow-400" />
                           <span className="text-gray-400 text-xs font-bold uppercase" style={{ fontFamily: 'Georgia, serif' }}>Graduated</span>
@@ -156,7 +159,7 @@ const AthleteCard = ({ athlete }) => {
                         <span className="text-white font-bold text-sm">{graduationYear}</span>
                       </div>
                     )}
-                    {!sport && !graduationYear && (
+                    {!displaySport && !graduationYear && (
                       <p className="text-gray-500 italic text-center text-sm py-2">Details coming soon...</p>
                     )}
                   </div>
@@ -280,7 +283,9 @@ const AthleteTimeline = () => {
         }
         
         // Split by multiple delimiters: comma, ampersand, AND dash with spaces
-        athlete.sport.split(/[,&]|(?:\s+-\s+)/).forEach(sport => {
+        // Replace "field" with "track" before processing
+        const normalizedSport = athlete.sport.replace(/\bfield\b/gi, 'track');
+        normalizedSport.split(/[,&]|(?:\s+-\s+)/).forEach(sport => {
           const trimmedSport = sport.trim();
           if (trimmedSport && !trimmedSport.toLowerCase().includes('coach')) {
             sports.add(trimmedSport);
@@ -322,7 +327,7 @@ const AthleteTimeline = () => {
         result = result.filter(athlete => String(athlete.classYear) === selectedYear);
     }
 
-    // 2. Filtering by Sport
+    // 2. Filtering by Sport (normalize "field" to "track" for comparison)
     if (filterSport !== 'All') {
       result = result.filter(athlete => {
         if (!athlete.sport) return false;
@@ -334,21 +339,27 @@ const AthleteTimeline = () => {
           return sportLower.includes('coach');
         }
         
+        // Normalize sport string by replacing "field" with "track"
+        const normalizedSport = athlete.sport.replace(/\bfield\b/gi, 'track');
+        
         // Check if the selected sport appears in the athlete's sport list
         // Split by comma, ampersand, AND dash with spaces
-        return athlete.sport.split(/[,&]|(?:\s+-\s+)/).some(s => s.trim() === filterSport);
+        return normalizedSport.split(/[,&]|(?:\s+-\s+)/).some(s => s.trim() === filterSport);
       });
     }
 
     // 3. Filtering by Search Term
     if (searchTerm) {
       const lowerCaseSearch = searchTerm.toLowerCase();
-      result = result.filter(athlete => 
-        athlete.name?.toLowerCase().includes(lowerCaseSearch) || 
-        athlete.sport?.toLowerCase().includes(lowerCaseSearch) ||
-        athlete.classYear?.toString().includes(lowerCaseSearch) ||
-        athlete.graduationYear?.toString().includes(lowerCaseSearch)
-      );
+      result = result.filter(athlete => {
+        // Normalize sport for search as well
+        const normalizedSport = athlete.sport ? athlete.sport.replace(/\bfield\b/gi, 'track') : '';
+        
+        return athlete.name?.toLowerCase().includes(lowerCaseSearch) || 
+          normalizedSport.toLowerCase().includes(lowerCaseSearch) ||
+          athlete.classYear?.toString().includes(lowerCaseSearch) ||
+          athlete.graduationYear?.toString().includes(lowerCaseSearch);
+      });
     }
 
     // 4. Sorting
