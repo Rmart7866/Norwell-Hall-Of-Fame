@@ -20,9 +20,32 @@ const getObjectPosition = (position) => {
   }
 };
 
+/**
+ * Normalizes sport names to replace standalone "Field" with "Track & Field"
+ */
+const normalizeSportName = (sport) => {
+  if (!sport) return sport;
+  
+  // Split the sport string by delimiters
+  const sports = sport.split(/[,&]|(?:\s+-\s+)/).map(s => s.trim());
+  
+  // Replace standalone "Field" with "Track & Field"
+  const normalizedSports = sports.map(s => {
+    if (s.toLowerCase() === 'field') {
+      return 'Track & Field';
+    }
+    return s;
+  });
+  
+  // Join back together with the original delimiter style (using " & " for consistency)
+  return normalizedSports.join(' & ');
+};
+
 // --- Sub Component: Plaque Placeholder (NEW COMPONENT) ---
 
 const PlaquePlaceholder = ({ name, sport, classYear }) => {
+    const displaySport = normalizeSportName(sport);
+    
     return (
         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-slate-900 p-6 text-center">
             <Trophy className="w-16 h-16 text-yellow-400 mb-4 opacity-70"/>
@@ -38,10 +61,10 @@ const PlaquePlaceholder = ({ name, sport, classYear }) => {
                 <p className="text-2xl font-black text-yellow-400">{classYear}</p>
             </div>
 
-            {sport && (
+            {displaySport && (
                 <div className="mt-4">
                     <p className="text-sm text-gray-400 uppercase font-semibold">Sport(s)</p>
-                    <p className="text-lg font-bold text-white leading-tight">{sport}</p>
+                    <p className="text-lg font-bold text-white leading-tight">{displaySport}</p>
                 </div>
             )}
         </div>
@@ -73,8 +96,8 @@ const AthleteCard = ({ athlete }) => {
   // Check if we need to use the Plaque
   const usePlaque = !photoURL;
   
-  // Keep sport as-is for display (Track & Field stays Track & Field)
-  const displaySport = sport;
+  // Normalize sport display: replace standalone "Field" with "Track & Field"
+  const displaySport = normalizeSportName(sport);
 
   return (
     <Link 
@@ -108,7 +131,7 @@ const AthleteCard = ({ athlete }) => {
                 {/* Photo Area / Plaque */}
                 <div className="relative h-80 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden flex-shrink-0">
                   {usePlaque ? (
-                    <PlaquePlaceholder name={name} sport={displaySport} classYear={classYear} />
+                    <PlaquePlaceholder name={name} sport={sport} classYear={classYear} />
                   ) : (
                     <img 
                       src={photoURL} 
@@ -285,11 +308,11 @@ const AthleteTimeline = () => {
         // Split by multiple delimiters: comma, ampersand, AND dash with spaces
         athlete.sport.split(/[,&]|(?:\s+-\s+)/).forEach(sport => {
           const trimmedSport = sport.trim();
-          // Skip coach roles and standalone "Field" entries
-          if (trimmedSport && 
-              !trimmedSport.toLowerCase().includes('coach') && 
-              trimmedSport.toLowerCase() !== 'field') {
-            sports.add(trimmedSport);
+          // Replace standalone "Field" with "Track & Field"
+          const normalizedSport = trimmedSport.toLowerCase() === 'field' ? 'Track & Field' : trimmedSport;
+          
+          if (normalizedSport && !normalizedSport.toLowerCase().includes('coach')) {
+            sports.add(normalizedSport);
           }
         });
       }
@@ -340,8 +363,16 @@ const AthleteTimeline = () => {
           return sportLower.includes('coach');
         }
         
+        // Special handling for Track & Field filter
+        if (filterSport === 'Track & Field') {
+          // Match if sport contains "Track & Field" OR standalone "Field"
+          return athlete.sport.split(/[,&]|(?:\s+-\s+)/).some(s => {
+            const trimmed = s.trim();
+            return trimmed === 'Track & Field' || trimmed.toLowerCase() === 'field';
+          });
+        }
+        
         // Check if the selected sport appears in the athlete's sport list
-        // Split by comma, ampersand, AND dash with spaces
         return athlete.sport.split(/[,&]|(?:\s+-\s+)/).some(s => s.trim() === filterSport);
       });
     }
@@ -349,12 +380,14 @@ const AthleteTimeline = () => {
     // 3. Filtering by Search Term
     if (searchTerm) {
       const lowerCaseSearch = searchTerm.toLowerCase();
-      result = result.filter(athlete => 
-        athlete.name?.toLowerCase().includes(lowerCaseSearch) || 
-        athlete.sport?.toLowerCase().includes(lowerCaseSearch) ||
-        athlete.classYear?.toString().includes(lowerCaseSearch) ||
-        athlete.graduationYear?.toString().includes(lowerCaseSearch)
-      );
+      result = result.filter(athlete => {
+        const normalizedSport = normalizeSportName(athlete.sport);
+        
+        return athlete.name?.toLowerCase().includes(lowerCaseSearch) || 
+          normalizedSport?.toLowerCase().includes(lowerCaseSearch) ||
+          athlete.classYear?.toString().includes(lowerCaseSearch) ||
+          athlete.graduationYear?.toString().includes(lowerCaseSearch);
+      });
     }
 
     // 4. Sorting
@@ -443,172 +476,3 @@ const AthleteTimeline = () => {
         <div className="container mx-auto px-4">
             <div className="relative flex items-center">
                 {/* Scroll Left Button */}
-                <button 
-                    onClick={() => scrollTimeline('left')}
-                    className="flex-shrink-0 p-2 bg-slate-800 text-yellow-500 rounded-full hover:bg-slate-700 transition shadow-lg z-20 mr-2 disabled:opacity-50"
-                    aria-label="Scroll timeline left"
-                >
-                    <ChevronLeft className="w-5 h-5" />
-                </button>
-
-                {/* Timeline Buttons (Horizontal Scroll) */}
-                <div 
-                    ref={timelineRef}
-                    className="flex overflow-x-scroll scrollbar-hide space-x-0 w-full relative" 
-                    style={{ WebkitOverflowScrolling: 'touch' }}
-                >
-                    {/* The flowing timeline bar */}
-                    <div className="absolute inset-y-0 h-1 bg-yellow-600 top-1/2 transform -translate-y-1/2 left-0 right-0 mx-2 z-0"></div>
-
-                    {uniqueYears.map((year, index) => (
-                        <div key={year} className="flex-shrink-0 relative z-10">
-                            {/* Year Button */}
-                            <button
-                                onClick={() => setSelectedYear(year)}
-                                className={`
-                                    px-6 py-2 text-sm font-black rounded-full transition-all duration-200 border-2 whitespace-nowrap 
-                                    ${
-                                        selectedYear === year
-                                        ? 'bg-yellow-600 text-slate-900 border-yellow-600 shadow-xl scale-105 ring-4 ring-yellow-400/50'
-                                        : 'bg-slate-700 text-white border-slate-700 hover:bg-slate-600'
-                                    }
-                                `}
-                            >
-                                {year === 'All' ? 'All Classes' : `${year}`}
-                            </button>
-                            {/* Connector dot (not needed on last element) */}
-                            {index < uniqueYears.length - 1 && (
-                                <div className="absolute w-1 h-1 bg-yellow-600 rounded-full top-1/2 right-0 transform -translate-y-1/2 translate-x-1/2 z-0"></div>
-                            )}
-                            {/* Spacer to visually separate buttons */}
-                            <div className="inline-block w-8"></div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Scroll Right Button */}
-                <button 
-                    onClick={() => scrollTimeline('right')}
-                    className="flex-shrink-0 p-2 bg-slate-800 text-yellow-500 rounded-full hover:bg-slate-700 transition shadow-lg z-20 ml-2 disabled:opacity-50"
-                    aria-label="Scroll timeline right"
-                >
-                    <ChevronRight className="w-5 h-5" />
-                </button>
-            </div>
-        </div>
-      </section>
-
-      {/* --- Search, Sort, and Filter Controls --- */}
-      <section className="bg-slate-900/50 py-6 border-b border-yellow-500/30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-            
-            {/* 1. Search Bar */}
-            <div className="md:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-yellow-500" />
-              <input
-                type="text"
-                placeholder="Search by Name, Sport, or Year..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-slate-800 text-white border border-yellow-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition"
-              />
-            </div>
-            
-            {/* 2. Sort Controls */}
-            <div className="flex space-x-2">
-              <button 
-                onClick={() => handleSortChange('name')} 
-                className={`flex items-center justify-center w-full px-4 py-2 rounded-lg font-bold text-sm transition ${
-                  sortBy === 'name' 
-                    ? 'bg-yellow-600 text-slate-900' 
-                    : 'bg-slate-700 text-yellow-500 hover:bg-slate-600'
-                }`}
-              >
-                Name {sortBy === 'name' && (sortOrder === 'asc' ? <SortAsc className="w-4 h-4 ml-1" /> : <SortDesc className="w-4 h-4 ml-1" />)}
-              </button>
-              
-              <button 
-                onClick={() => handleSortChange('graduationYear')} 
-                className={`flex items-center justify-center w-full px-4 py-2 rounded-lg font-bold text-sm transition ${
-                  sortBy === 'graduationYear' 
-                    ? 'bg-yellow-600 text-slate-900' 
-                    : 'bg-slate-700 text-yellow-500 hover:bg-slate-600'
-                }`}
-              >
-                Grad Year {sortBy === 'graduationYear' && (sortOrder === 'asc' ? <SortAsc className="w-4 h-4 ml-1" /> : <SortDesc className="w-4 h-4 ml-1" />)}
-              </button>
-            </div>
-            
-            {/* 3. Filter Dropdown (Sport) */}
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-yellow-500 pointer-events-none" />
-              <select
-                value={filterSport}
-                onChange={(e) => setFilterSport(e.target.value)}
-                className="appearance-none w-full pl-10 pr-4 py-2 bg-slate-800 text-white border border-yellow-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition cursor-pointer"
-              >
-                {uniqueSports.map(sport => (
-                  <option key={sport} value={sport}>{sport}</option>
-                ))}
-              </select>
-              <ChevronRight className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-yellow-500 rotate-90 pointer-events-none" />
-            </div>
-            
-          </div>
-        </div>
-      </section>
-
-      {/* --- Athlete Grid Display --- */}
-      <section className="py-16 pb-24 relative">
-        <div className="container mx-auto px-4">
-          
-          {filteredAndSortedAthletes.length === 0 ? (
-            <div className="text-center py-20">
-              <GraduationCap className="w-24 h-24 mx-auto mb-6 text-gray-400" />
-              <h2 className="text-3xl font-bold text-white mb-4">No Matches Found</h2>
-              <p className="text-gray-400 text-lg">Try adjusting your search term, sort options, or filters.</p>
-            </div>
-          ) : (
-            <>
-              <p className="text-gray-400 text-center mb-8">
-                
-                {selectedYear !== 'All' && ` from the ${selectedYear} HOF class`}
-                {filterSport !== 'All' && ` filtered by ${filterSport}`}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {filteredAndSortedAthletes.map((athlete) => (
-                  <AthleteCard key={athlete.id} athlete={athlete} />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Styles for Card Flip and Scrollbar Hide */}
-      <style jsx global>{`
-        /* Card Flip Styles */
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-        }
-
-        /* Hide scrollbar for the horizontal timeline */
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-      `}</style>
-    </div>
-  );
-};
-
-export default AthleteTimeline;
