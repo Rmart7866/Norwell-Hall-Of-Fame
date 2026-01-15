@@ -124,59 +124,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Editable Banner Section */}
-      {bannerData && bannerData.enabled && (bannerData.title || bannerData.description || bannerData.imageURL) && (
-        <section className="relative py-0 overflow-hidden">
-          <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-            {/* Banner Image */}
-            {bannerData.imageURL && (
-              <div className="relative h-[500px] overflow-hidden">
-                <img
-                  src={bannerData.imageURL}
-                  alt="Banner"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
-              </div>
-            )}
-            
-            {/* Content Overlay */}
-            {(bannerData.title || bannerData.description) && (
-              <div className={`${bannerData.imageURL ? 'absolute inset-0' : 'relative py-24'} flex items-center`}>
-                <div className="container mx-auto px-4 relative z-10">
-                  <div className="max-w-4xl">
-                    {/* Animated accent line */}
-                    <div className="h-2 w-32 bg-gradient-to-r from-yellow-400 to-yellow-600 mb-8 animate-pulse"></div>
-                    
-                    {bannerData.title && (
-                      <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-8 leading-tight tracking-tight drop-shadow-2xl">
-                        {bannerData.title}
-                      </h2>
-                    )}
-                    
-                    {bannerData.description && (
-                      <p className="text-xl md:text-2xl lg:text-3xl text-gray-100 leading-relaxed drop-shadow-lg mb-8 max-w-3xl">
-                        {bannerData.description}
-                      </p>
-                    )}
-                    
-                    {/* Optional decorative element */}
-                    <div className="flex gap-3 mt-10">
-                      <div className="h-1 w-20 bg-yellow-400"></div>
-                      <div className="h-1 w-14 bg-yellow-400/70"></div>
-                      <div className="h-1 w-8 bg-yellow-400/40"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {/* Bottom fade effect */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent"></div>
-          </div>
-        </section>
-      )}
-
       {/* Latest Inductees Section */}
       <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="container mx-auto px-4">
@@ -346,6 +293,62 @@ const Home = () => {
           )}
         </div>
       </section>
+
+      {/* Editable Banner Section */}
+      {bannerData && bannerData.enabled && (bannerData.title || bannerData.description || bannerData.imageURL) && (
+        <section className="relative py-0 overflow-hidden">
+          <div className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+            {/* Banner Image */}
+            {bannerData.imageURL && (
+              <div className="relative h-[500px] overflow-hidden">
+                <img
+                  src={bannerData.imageURL}
+                  alt="Banner"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+              </div>
+            )}
+            
+            {/* Content Overlay */}
+            {(bannerData.title || bannerData.description) && (
+              <div className={`${bannerData.imageURL ? 'absolute inset-0' : 'relative py-24'} flex items-center`}>
+                <div className="container mx-auto px-4 relative z-10">
+                  <div className="max-w-4xl">
+                    {bannerData.title && (
+                      <div className="mb-8">
+                        <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight drop-shadow-2xl inline-block">
+                          {bannerData.title}
+                        </h2>
+                        <div className="h-1 w-32 bg-gradient-to-r from-yellow-400 to-transparent mt-4"></div>
+                      </div>
+                    )}
+                    
+                    {bannerData.description && (
+                      <p className="text-xl md:text-2xl lg:text-3xl text-gray-100 leading-relaxed drop-shadow-lg mb-10 max-w-3xl">
+                        {bannerData.description}
+                      </p>
+                    )}
+
+                    {/* Wall of Fame Button */}
+                    <div className="mt-8">
+                      <Link
+                        to="/wall-of-fame"
+                        className="inline-block bg-yellow-400 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                      >
+                        View Wall of Fame
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Bottom fade effect */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent"></div>
+          </div>
+        </section>
+      )}
 
       {/* Latest Championship Section */}
       {latestChampionship && (
