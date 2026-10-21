@@ -1,5 +1,7 @@
 // src/pages/admin/Dashboard.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { collection, getCountFromServer } from 'firebase/firestore';
+import { db } from '../../firebase/config';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { Trophy, Users, Image, Video, Calendar, FileText, Home } from 'lucide-react';
@@ -14,7 +16,7 @@ import ManageAboutPage from '../../components/admin/ManageAboutPage';
 import ManageHomeBanner from '../../components/admin/ManageHomeBanner';
 import ManageWallOfFame from '../../components/admin/ManageWallOfFame';
 import ManageClassImages from '../../components/admin/ManageClassImages';
-import DataSeeder from '../../components/admin/DataSeeder';
+import ManageHomeIntro from '../../components/admin/ManageHomeIntro';
 
 const Dashboard = () => {
   const { currentUser } = useAuth();
@@ -26,6 +28,7 @@ const Dashboard = () => {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: Trophy },
+    { id: 'home-intro', label: 'Home Intro', icon: FileText },
     { id: 'home-banner', label: 'Home Banner', icon: Home },
     { id: 'home-content', label: 'Home Content', icon: FileText },
     { id: 'wall-of-fame', label: 'Wall of Fame', icon: Trophy },
@@ -74,6 +77,7 @@ const Dashboard = () => {
         {/* Tab Content */}
         <div className="bg-white rounded-lg shadow-lg p-8">
           {activeTab === 'overview' && <OverviewTab />}
+          {activeTab === 'home-intro' && <ManageHomeIntro />}
           {activeTab === 'home-banner' && <ManageHomeBanner />}
           {activeTab === 'home-content' && <ManageHomeContent />}
           {activeTab === 'wall-of-fame' && <ManageWallOfFame />}
@@ -92,37 +96,54 @@ const Dashboard = () => {
 };
 
 const OverviewTab = () => {
+  const [counts, setCounts] = useState(null);
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const names = ['classes', 'inductees', 'photos', 'videos'];
+        const snaps = await Promise.all(names.map((n) => getCountFromServer(collection(db, n))));
+        const next = {};
+        names.forEach((n, i) => { next[n] = snaps[i].data().count; });
+        setCounts(next);
+      } catch (error) {
+        // A failed count must not take the whole tab down, so the tiles fall
+        // back to a dash rather than the page going blank.
+        console.error('Error counting documents:', error);
+        setCounts(null);
+      }
+    };
+    fetchCounts();
+  }, []);
+
+  const show = (key) => (counts && counts[key] != null ? counts[key] : '-');
+
   return (
     <div>
       <h2 className="text-3xl font-bold text-norwell-blue mb-6">Dashboard Overview</h2>
       
-      {/* Data Seeder Component */}
-      <div className="mb-8">
-        <DataSeeder />
-      </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg">
           <Calendar className="w-12 h-12 mb-3 opacity-80" />
-          <p className="text-3xl font-bold mb-1">-</p>
+          <p className="text-3xl font-bold mb-1">{show('classes')}</p>
           <p className="text-blue-100">Total Classes</p>
         </div>
         
         <div className="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg">
           <Users className="w-12 h-12 mb-3 opacity-80" />
-          <p className="text-3xl font-bold mb-1">-</p>
+          <p className="text-3xl font-bold mb-1">{show('inductees')}</p>
           <p className="text-green-100">Total Inductees</p>
         </div>
         
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg">
           <Image className="w-12 h-12 mb-3 opacity-80" />
-          <p className="text-3xl font-bold mb-1">-</p>
+          <p className="text-3xl font-bold mb-1">{show('photos')}</p>
           <p className="text-purple-100">Total Photos</p>
         </div>
         
         <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-lg shadow-lg">
           <Video className="w-12 h-12 mb-3 opacity-80" />
-          <p className="text-3xl font-bold mb-1">-</p>
+          <p className="text-3xl font-bold mb-1">{show('videos')}</p>
           <p className="text-red-100">Total Videos</p>
         </div>
       </div>
@@ -134,8 +155,7 @@ const OverviewTab = () => {
             Getting Started
           </h3>
           <ol className="list-decimal list-inside space-y-2 text-gray-700">
-            <li>Use the Data Seeder above for quick testing</li>
-            <li>Or manually add classes in "Manage Classes"</li>
+            <li>Add the induction year in "Manage Classes"</li>
             <li>Add class images in "Class Images" tab</li>
             <li>Add inductees to classes in "Manage Inductees"</li>
             <li>Add championships in "Championships" tab</li>
@@ -148,10 +168,8 @@ const OverviewTab = () => {
         <div className="border-2 border-gray-200 rounded-lg p-6">
           <h3 className="text-xl font-bold text-norwell-blue mb-3">Quick Tips</h3>
           <ul className="space-y-2 text-gray-700">
-            <li>✅ Data Seeder includes realistic test data</li>
-            <li>✅ Photos auto-load from Unsplash</li>
-            <li>✅ Delete test data anytime from manage tabs</li>
-            <li>✅ Check the timeline at /inductees after upload</li>
+            <li>✅ Let a photo finish uploading before you save</li>
+            <li>✅ Check the timeline at /inductees after a change</li>
             <li>✅ Use Championship Photos tab to add gallery images</li>
             <li>✅ Class Images appear on the inductees timeline</li>
             <li>✅ About Page editor has live preview mode</li>

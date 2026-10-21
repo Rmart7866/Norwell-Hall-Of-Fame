@@ -1,0 +1,6 @@
+# Firestore data dumps written before the duplicate cleanup. These are a full
+# export of the live database and this repository is PUBLIC, so they stay
+# local. Keep them, they are the rollback for that cleanup.
+firestore-backup-*.json
+
+.DS_Store

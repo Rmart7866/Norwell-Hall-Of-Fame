@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createClass, getAllClasses, updateInductee } from '../../firebase/firestore'; // Note: updateInductee should likely be updateClass
+import { createClass, getAllClasses, updateClass } from '../../firebase/firestore';
 import { Plus, Calendar, Trash2, Edit } from 'lucide-react';
 
 // Import the utility function from the separate file
@@ -44,9 +44,12 @@ const ManageClasses = () => {
         };
 
         if (editingId) {
-            // Update existing class (Assuming you have an updateClass utility)
-            // Note: I'm using updateInductee here as per your original file, but updateClass is better practice.
-            const { error } = await updateInductee(editingId, classData); 
+            // updateClass, NOT updateInductee. This used to call updateInductee,
+            // which resolves doc(db, 'inductees', id), so a CLASS document's id
+            // was aimed at the inductees collection. updateDoc on a path that
+            // does not exist throws "No document to update", so class edits
+            // always failed with a red error and never saved.
+            const { error } = await updateClass(editingId, classData); 
             
             if (error) {
                 setMessage({ type: 'error', text: error });

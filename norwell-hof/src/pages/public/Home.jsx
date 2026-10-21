@@ -5,6 +5,84 @@ import { collection, query, where, getDocs, orderBy, limit, doc, getDoc } from '
 import { db } from '../../firebase/config';
 import { Award, User, Download, GraduationCap, MousePointerClick, Trophy, ChevronRight } from 'lucide-react';
 
+// Home Intro Section (sits directly under the hero, above Latest Inductees)
+//
+// Reads pages/home-intro, written by the Home Intro admin tab. Renders nothing
+// at all when the document is missing, disabled, or empty, so the page looks
+// exactly as it did before anyone fills it in.
+const HomeIntroSection = () => {
+  const [intro, setIntro] = useState(null);
+
+  useEffect(() => {
+    const fetchIntro = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, 'pages', 'home-intro'));
+        if (docSnap.exists() && docSnap.data().enabled) setIntro(docSnap.data());
+      } catch (error) {
+        console.error('Error fetching home intro:', error);
+      }
+    };
+    fetchIntro();
+  }, []);
+
+  if (!intro) return null;
+
+  // A blank line starts a new paragraph, the same convention the About page
+  // uses for its history section.
+  const paragraphs = String(intro.body || '')
+    .split(/\n\s*\n/)
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  if (!intro.title && paragraphs.length === 0 && !intro.imageURL) return null;
+
+  const crop = intro.imagePosition === 'top' ? 'object-top'
+    : intro.imagePosition === 'bottom' ? 'object-bottom' : 'object-center';
+  const hasImage = Boolean(intro.imageURL);
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 border-b-4 border-yellow-400">
+      <div className="container mx-auto px-4">
+        <div className={`flex flex-col gap-10 items-center ${
+          hasImage ? (intro.imageSide === 'left' ? 'md:flex-row-reverse' : 'md:flex-row') : ''
+        } max-w-7xl mx-auto`}>
+          <div className={hasImage ? 'md:w-3/5' : 'max-w-3xl mx-auto text-center'}>
+            {intro.title && (
+              <>
+                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+                  {intro.title}
+                </h2>
+                <div className={`h-1 w-40 bg-gradient-to-r from-yellow-400 to-transparent mb-8 ${hasImage ? '' : 'mx-auto'}`}></div>
+              </>
+            )}
+            {paragraphs.map((text, i) => (
+              <p key={i} className="text-lg md:text-xl text-gray-200 leading-relaxed mb-5 last:mb-0">
+                {text}
+              </p>
+            ))}
+          </div>
+
+          {hasImage && (
+            <div className="md:w-2/5 w-full">
+              <div className="border-4 border-yellow-400/70 rounded-lg overflow-hidden shadow-2xl">
+                <img
+                  src={intro.imageURL}
+                  alt={intro.imageCaption || intro.title || 'Norwell Athletic Hall of Fame'}
+                  loading="lazy"
+                  className={`w-full h-80 md:h-96 object-cover ${crop}`}
+                />
+              </div>
+              {intro.imageCaption && (
+                <p className="text-sm text-gray-400 mt-3 text-center italic">{intro.imageCaption}</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // Nominations Section Component (appears at bottom of page)
 const NominationsSection = () => {
   const [contentData, setContentData] = useState(null);
@@ -186,6 +264,9 @@ const Home = () => {
           </p>
         </div>
       </div>
+
+      {/* Home Intro Section, under the hero and above the inductees */}
+      <HomeIntroSection />
 
       {/* Latest Inductees Section */}
       <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">

@@ -122,6 +122,28 @@ import {
     }
   };
   
+  export const updateClass = async (id, classData) => {
+    try {
+      const docRef = doc(db, 'classes', id);
+      await updateDoc(docRef, {
+        ...classData,
+        updatedAt: serverTimestamp(),
+      });
+      return { error: null };
+    } catch (error) {
+      return { error: error.message };
+    }
+  };
+  
+  export const deleteClass = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'classes', id));
+      return { error: null };
+    } catch (error) {
+      return { error: error.message };
+    }
+  };
+  
   // PHOTOS
   export const createPhoto = async (photoData) => {
     try {
